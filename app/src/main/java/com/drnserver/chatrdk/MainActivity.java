@@ -1,11 +1,13 @@
 package com.drnserver.chatrdk;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -44,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         //init view variables
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         //init button lister for login button
         signupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //store the userfield and password field for account creation
+                //store the userfield and password field for account login
                 String currentUser = userField.getText().toString();
                 String currentPassword = passwordField.getText().toString();
 
@@ -180,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Succsex login.",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Intent myIntent = new Intent(MainActivity.this, mainframe.class);
+                            MainActivity.this.startActivity(myIntent);
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

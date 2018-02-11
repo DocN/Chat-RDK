@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Chat RDK</string>
+    <string name="title_activity_mainportal">mainportal</string>
+    <string name="title_activity_main_module">MainModule</string>
 </resources>
