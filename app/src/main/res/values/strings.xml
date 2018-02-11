@@ -2,4 +2,7 @@
     <string name="app_name">Chat RDK</string>
     <string name="title_activity_mainportal">mainportal</string>
     <string name="title_activity_main_module">MainModule</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

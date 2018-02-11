@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Chat-RDK.iml" filepath="$PROJECT_DIR$/Chat-RDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chatrdk.iml" filepath="$PROJECT_DIR$/chatrdk.iml" />
+      <module fileurl="file://C:\chatrdk\Chat-RDK\chatrdk.iml" filepath="C:\chatrdk\Chat-RDK\chatrdk.iml" />
     </modules>
   </component>
 </project>

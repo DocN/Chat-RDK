@@ -4,6 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.drnserver.chatrdk.mainframe">
+    tools:context="com.drnserver.chatrdk.profileMain">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="643dp"
+        tools:layout_editor_absoluteX="63dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="87dp"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:text="Bruce Wayne"
+            android:textSize="25dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="92dp"
+            android:text="Distance" />
+
+        <TextView
+            android:id="@+id/tempIDCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="43dp"
+            android:text="TextView" />
+
+        <SeekBar
+            android:id="@+id/seekBar2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView2"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="11dp" />
+
+        <TextView
+            android:id="@+id/actualDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar2"
+            android:layout_toStartOf="@+id/imageButton"
+            android:text="8 Miles"
+            android:textSize="10dp" />
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

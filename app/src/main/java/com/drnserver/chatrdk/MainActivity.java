@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private Button signupButton;
 
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Succsex login.",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("here" + user.getEmail());
                             Intent myIntent = new Intent(MainActivity.this, mainframe.class);
                             MainActivity.this.startActivity(myIntent);
                             finish();
@@ -198,4 +199,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

@@ -10,16 +10,26 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="43dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="153dp"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_light" />
 
         <EditText
             android:id="@+id/usernameField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="64dp"
+            android:layout_alignStart="@+id/passwordField"
+            android:layout_below="@+id/imageView"
+            android:layout_marginTop="34dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:text="031247ryan@gmail.com" />
@@ -28,22 +38,21 @@
             android:id="@+id/passwordField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/usernameField"
             android:layout_below="@+id/usernameField"
-            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
             android:ems="10"
             android:inputType="textPassword"
             android:text="" />
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/passwordField"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="21dp"
             android:text="Login" />
-
         <Button
             android:id="@+id/SignupButton"
             android:layout_width="wrap_content"
@@ -52,5 +61,7 @@
             android:layout_below="@+id/loginButton"
             android:layout_marginTop="46dp"
             android:text="Signup" />
+
     </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
