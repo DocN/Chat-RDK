@@ -1,7 +1,6 @@
-package com.android.rivchat.model;
+package com.drnserver.chatrdk.model;
 
 import java.util.ArrayList;
-
 
 
 public class Conversation {

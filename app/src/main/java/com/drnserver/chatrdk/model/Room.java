@@ -1,9 +1,8 @@
-package com.android.rivchat.model;
+package com.drnserver.chatrdk.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 public class Room {

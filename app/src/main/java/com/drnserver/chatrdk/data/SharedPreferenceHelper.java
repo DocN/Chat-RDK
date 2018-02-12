@@ -1,10 +1,9 @@
-package com.android.rivchat.data;
+package com.drnserver.chatrdk.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.android.rivchat.model.User;
-
+import com.drnserver.chatrdk.model.User;
 
 
 public class SharedPreferenceHelper {

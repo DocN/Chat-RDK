@@ -1,4 +1,4 @@
-package com.android.rivchat.service;
+package com.drnserver.chatrdk.service;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -8,17 +8,16 @@ import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
 
+import com.drnserver.chatrdk.data.SharedPreferenceHelper;
+import com.drnserver.chatrdk.data.StaticConfig;
+import com.drnserver.chatrdk.model.Friend;
+import com.drnserver.chatrdk.model.ListFriend;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.android.rivchat.data.SharedPreferenceHelper;
-import com.android.rivchat.data.StaticConfig;
-import com.android.rivchat.model.Friend;
-import com.android.rivchat.model.ListFriend;
 
 import java.util.HashMap;
-
 
 
 public class ServiceUtils {

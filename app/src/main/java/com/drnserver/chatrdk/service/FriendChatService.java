@@ -1,4 +1,4 @@
-package com.android.rivchat.service;
+package com.drnserver.chatrdk.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,24 +16,23 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
+import com.drnserver.chatrdk.MainActivity;
+import com.drnserver.chatrdk.R;
+import com.drnserver.chatrdk.data.FriendDB;
+import com.drnserver.chatrdk.data.GroupDB;
+import com.drnserver.chatrdk.data.StaticConfig;
+import com.drnserver.chatrdk.model.Friend;
+import com.drnserver.chatrdk.model.Group;
+import com.drnserver.chatrdk.model.ListFriend;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.android.rivchat.MainActivity;
-import com.android.rivchat.R;
-import com.android.rivchat.data.FriendDB;
-import com.android.rivchat.data.GroupDB;
-import com.android.rivchat.data.StaticConfig;
-import com.android.rivchat.model.Friend;
-import com.android.rivchat.model.Group;
-import com.android.rivchat.model.ListFriend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 public class FriendChatService extends Service {
@@ -91,7 +90,7 @@ public class FriendChatService extends Service {
                                         byte[] decodedString = Base64.decode(friend.avata, Base64.DEFAULT);
                                         mapBitmap.put(friend.idRoom, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                                     } else {
-                                        mapBitmap.put(friend.idRoom, BitmapFactory.decodeResource(getResources(), R.drawable.default_avata));
+                                        mapBitmap.put(friend.idRoom, BitmapFactory.decodeResource(getResources(), R.drawable.com_facebook_button_icon));
                                     }
                                 }
                                 createNotify(friend.name, (String) ((HashMap) dataSnapshot.getValue()).get("text"), friend.idRoom.hashCode(), mapBitmap.get(friend.idRoom), false);
@@ -134,7 +133,7 @@ public class FriendChatService extends Service {
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             if (mapMark.get(group.id) != null && mapMark.get(group.id)) {
                                 if (mapBitmap.get(group.id) == null) {
-                                    mapBitmap.put(group.id, BitmapFactory.decodeResource(getResources(), R.drawable.ic_notify_group));
+                                    mapBitmap.put(group.id, BitmapFactory.decodeResource(getResources(), R.drawable.com_facebook_auth_dialog_background));
                                 }
                                 createNotify(group.groupInfo.get("name"), (String) ((HashMap) dataSnapshot.getValue()).get("text"), group.id.hashCode(), mapBitmap.get(group.id) , true);
                             } else {
@@ -189,9 +188,9 @@ public class FriendChatService extends Service {
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setAutoCancel(true);
         if (isGroup) {
-            notificationBuilder.setSmallIcon(R.drawable.ic_tab_group);
+            notificationBuilder.setSmallIcon(R.drawable.com_facebook_button_icon);
         } else {
-            notificationBuilder.setSmallIcon(R.drawable.ic_tab_person);
+            notificationBuilder.setSmallIcon(R.drawable.com_facebook_button_icon_blue);
         }
         NotificationManager notificationManager =
                 (NotificationManager) this.getSystemService(

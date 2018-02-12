@@ -27,7 +27,7 @@ public class mainframe extends AppCompatActivity {
         this.removeTopBar();
         setContentView(R.layout.activity_mainframe);
         //store local auth reference
-        mAuth = MainActivity.mAuth;
+        mAuth = loginActivity.mAuth;
         //declare objects in view
         profileName = (TextView) findViewById(R.id.profileName);
         userID = (TextView) findViewById(R.id.tempIDCheck);
