@@ -17,6 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.drnserver.chatrdk.model.User;
+import com.drnserver.chatrdk.data.StaticConfig;
 
 public class loginActivity extends AppCompatActivity {
     private static final int MIN_PASSWORD_LENGTH = 5;
@@ -172,6 +175,7 @@ public class loginActivity extends AppCompatActivity {
                             Toast.makeText(loginActivity.this, "Succsex login.",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            initNewUserInfo(user);
                             System.out.println("here" + user.getEmail());
                             Intent myIntent = new Intent(loginActivity.this, MainActivity.class);
                             loginActivity.this.startActivity(myIntent);
@@ -186,5 +190,13 @@ public class loginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    void initNewUserInfo(FirebaseUser user) {
+        User newUser = new User();
+        newUser.email = user.getEmail();
+        newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
+        newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
+        FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
     }
 }
