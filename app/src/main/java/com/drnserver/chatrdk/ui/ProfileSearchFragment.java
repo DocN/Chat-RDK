@@ -82,7 +82,7 @@ public class ProfileSearchFragment extends Fragment {
     public View onCreateVie (LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_search_fragment, container, false);
         btnTEST = (ImageButton) view.findViewById(R.id.searchButton);
-
+        /* work in progress
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +99,7 @@ public class ProfileSearchFragment extends Fragment {
                 Toast.makeText(getActivity(), "TESTING BUTTON CLICK 1", Toast.LENGTH_SHORT).show();
             }
         });
-
+        */
         return view;
     }
 }
