@@ -80,9 +80,18 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     *
+     * onCreatevView - Creates the friend fragment for usage in tabs for main activity UI
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //setup timer to refresh friend's list on a regular basis
         detectFriendOnline = new CountDownTimer(System.currentTimeMillis(), StaticConfig.TIME_TO_REFRESH) {
             @Override
             public void onTick(long l) {
@@ -95,6 +104,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             }
         };
+        //grab the friends list from the UI if it's not already assigned
         if (dataListFriend == null) {
             dataListFriend = FriendDB.getInstance(getContext()).getListFriend();
             if (dataListFriend.getListFriend().size() > 0) {
@@ -102,9 +112,11 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 for (Friend friend : dataListFriend.getListFriend()) {
                     listFriendID.add(friend.id);
                 }
+                //start checking and updating friends list
                 detectFriendOnline.start();
             }
         }
+        //create references to all the UI objects and add listener to objects
         View layout = inflater.inflate(R.layout.fragment_friends, container, false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerListFrends = (RecyclerView) layout.findViewById(R.id.recycleListFriend);
@@ -113,6 +125,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mSwipeRefreshLayout.setOnRefreshListener(this);
         adapter = new ListFriendsAdapter(getContext(), dataListFriend, this);
         recyclerListFrends.setAdapter(adapter);
+
+        //add friends to your list
         dialogFindAllFriend = new LovelyProgressDialog(getContext());
         if (listFriendID == null) {
             listFriendID = new ArrayList<>();
@@ -124,6 +138,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             getListFriendUId();
         }
 
+        //removing friends UI
         deleteFriendReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -145,6 +160,9 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return layout;
     }
 
+    /**
+     * onDestoryView - when instance is destoryed remove all friends from list.
+     */
     @Override
     public void onDestroyView (){
         super.onDestroyView();
@@ -152,6 +170,12 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getContext().unregisterReceiver(deleteFriendReceiver);
     }
 
+    /**
+     * onActivityResult populate the view with friend ID
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -160,6 +184,9 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    /**
+     *  onRefresh - when the view is refreshed clear the UI and repopulate it with data
+     */
     @Override
     public void onRefresh() {
         listFriendID.clear();
@@ -170,6 +197,9 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getListFriendUId();
     }
 
+    /**
+     * vFragFriendClickFloatButton - The float button for adding friends executed when button is pushed (Listener)
+     */
     public class FragFriendClickFloatButton implements View.OnClickListener {
         Context context;
         LovelyProgressDialog dialogWait;
@@ -183,8 +213,13 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return this;
         }
 
+        /**
+         * onClick - when the float button is clicked called popup box with dialog options for adding friends
+         * @param view
+         */
         @Override
         public void onClick(final View view) {
+            //generate the dialog box
             new LovelyTextInputDialog(view.getContext(), R.style.EditTextTintTheme)
                     .setTopColorRes(R.color.colorPrimary)
                     .setTitle("Add friend")
@@ -192,6 +227,11 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setIcon(R.drawable.ic_add_friend)
                     .setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
                     .setInputFilter("Email not found", new LovelyTextInputDialog.TextFilter() {
+                        /**
+                         * check to check if the input email address for adding is a valid email
+                         * @param text
+                         * @return
+                         */
                         @Override
                         public boolean check(String text) {
                             Pattern VALID_EMAIL_ADDRESS_REGEX =
@@ -213,7 +253,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
 
         /**
-         * TIm id cua email tren server
+         * findIDEmail - Search the database for the user that we're trying to add to the friend's list.
          *
          * @param email
          */
@@ -227,6 +267,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     dialogWait.dismiss();
+                    //when the search email isn't found
                     if (dataSnapshot.getValue() == null) {
                         //email not found
                         new LovelyInfoDialog(context)
@@ -245,6 +286,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .setMessage("Email not valid")
                                     .show();
                         } else {
+                            //adding a person to yo friend's list
                             HashMap userMap = (HashMap) ((HashMap) dataSnapshot.getValue()).get(id);
                             Friend user = new Friend();
                             user.name = (String) userMap.get("name");
@@ -265,7 +307,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
 
         /**
-         * Lay danh sach friend cua một UID
+         * checkBeforeAddFriend - tries to add someone to friends list
          */
         private void checkBeforAddFriend(final String idFriend, Friend userInfo) {
             dialogWait.setCancelable(false)
@@ -358,7 +400,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     /**
-     * Lay danh sach ban be tren server
+     * getListFriendUId - Get the UID of a friend
      */
     private void getListFriendUId() {
         FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -384,7 +426,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     /**
-     * Truy cap bang user lay thong tin id nguoi dung
+     * getAllFriendInfo gets all the data from a particular friend.
      */
     private void getAllFriendInfo(final int index) {
         if (index == listFriendID.size()) {
