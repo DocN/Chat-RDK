@@ -1,11 +1,15 @@
 package com.drnserver.chatrdk;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.drnserver.chatrdk.ui.FriendsFragment;
 import com.drnserver.chatrdk.ui.ProfileSearchFragment;
@@ -54,4 +58,31 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         floatButton.setOnClickListener(((FriendsFragment) adapter.getItem(0)).onClickFloatButton.getInstance(MainActivity.this));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menuaction, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.openSettings:
+                this.goToProfile();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void goToProfile() {
+        Intent myIntent = new Intent(MainActivity.this, ProfilePage.class);
+        MainActivity.this.startActivity(myIntent);
+    }
+
+
 }

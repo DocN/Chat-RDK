@@ -12,8 +12,8 @@ package com.drnserver.chatrdk;
         import com.google.android.gms.tasks.OnCompleteListener;
         import com.google.firebase.auth.FirebaseAuth;
 
-public class mainframe extends AppCompatActivity {
-    private static final String TAG = "mainframe";
+public class ProfilePage extends AppCompatActivity {
+    private static final String TAG = "ProfilePage";
     //back controller vars
     private boolean backExit;
     private boolean runningBackHold;
