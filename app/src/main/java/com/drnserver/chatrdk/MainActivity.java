@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.drnserver.chatrdk.ui.FriendsFragment;
+import com.drnserver.chatrdk.ui.ProfileSearchFragment;
 
 
 /*
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("here dude");
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new FriendsFragment(), "Friends");
-
+        adapter.addFragment(new ProfileSearchFragment(), "Profile Search");
         viewPager.setAdapter(adapter);
         floatButton.setOnClickListener(((FriendsFragment) adapter.getItem(0)).onClickFloatButton.getInstance(MainActivity.this));
     }
