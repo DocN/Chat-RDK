@@ -76,10 +76,11 @@ public class ProfileSearchFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference myRef;
 
+
     String id = "CZ1Bcon808dHrAJAl6ExxulmgFZ2";
     @Nullable
     @Override
-    public View onCreateVie (LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_search_fragment, container, false);
         btnTEST = (ImageButton) view.findViewById(R.id.searchButton);
         /* work in progress

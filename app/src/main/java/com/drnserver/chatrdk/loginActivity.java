@@ -175,6 +175,7 @@ public class loginActivity extends AppCompatActivity {
                             Toast.makeText(loginActivity.this, "Succsex login.",
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            StaticConfig.UID = user.getUid();
                             initNewUserInfo(user);
                             System.out.println("here" + user.getEmail());
                             Intent myIntent = new Intent(loginActivity.this, MainActivity.class);

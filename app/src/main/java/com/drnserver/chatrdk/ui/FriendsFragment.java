@@ -243,6 +243,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
                         @Override
                         public void onTextInputConfirmed(String text) {
+                            //System.out.println("adding friend debugging");
                             //Tim id user id
                             findIDEmail(text);
                             //Check xem da ton tai ban ghi friend chua
@@ -278,6 +279,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .show();
                     } else {
                         String id = ((HashMap) dataSnapshot.getValue()).keySet().iterator().next().toString();
+                        System.out.println("debugging adding friend" + id);
                         if (id.equals(StaticConfig.UID)) {
                             new LovelyInfoDialog(context)
                                     .setTopColorRes(R.color.colorAccent)
@@ -342,11 +344,13 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         private void addFriend(final String idFriend, boolean isIdFriend) {
             if (idFriend != null) {
                 if (isIdFriend) {
+                    System.out.println("LOL" + StaticConfig.UID);
                     FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).push().setValue(idFriend)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        System.out.println("LOL2" + StaticConfig.UID);
                                         addFriend(idFriend, false);
                                     }
                                 }
@@ -364,6 +368,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 }
                             });
                 } else {
+                    System.out.println(idFriend + "testing id friend");
                     FirebaseDatabase.getInstance().getReference().child("friend/" + idFriend).push().setValue(StaticConfig.UID).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
