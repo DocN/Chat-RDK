@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "144248378305",
-    "firebase_url": "https://chatrdk-458bf.firebaseio.com",
-    "project_id": "chatrdk-458bf",
-    "storage_bucket": "chatrdk-458bf.appspot.com"
+    "project_number": "590742587187",
+    "firebase_url": "https://chatrdk-f3d59.firebaseio.com",
+    "project_id": "chatrdk-f3d59",
+    "storage_bucket": "chatrdk-f3d59.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:144248378305:android:cc7372a602cea4dc",
+        "mobilesdk_app_id": "1:590742587187:android:cc7372a602cea4dc",
         "android_client_info": {
           "package_name": "com.drnserver.chatrdk"
         }
       },
       "oauth_client": [
         {
-          "client_id": "144248378305-c177q0fhsho09gdp1g845ana9rcnc96a.apps.googleusercontent.com",
+          "client_id": "590742587187-tu6ah5pt4dhsteifk6aqegif6ssjo3o5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.drnserver.chatrdk",
-            "certificate_hash": "2a97ebe0cac8f13713f78cfa1cf3aa15558801ad"
+            "certificate_hash": "e48827db3bc668d3aaec422ef7cb9ca5a6dea8d8"
           }
         },
         {
-          "client_id": "144248378305-cqckckk79lrnnfc33rj4ebs0k3qoi7ki.apps.googleusercontent.com",
+          "client_id": "590742587187-0kacb3t05lqjtp37u21pla63oj42cp7n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBARJpBOxUyGmoH5-2nWv2Y-rSgLBjTv0I"
+          "current_key": "AIzaSyCWypx2g87DpzvyJYQCem5FE3CACisSJQw"
         }
       ],
       "services": {
@@ -40,10 +40,41 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "144248378305-cqckckk79lrnnfc33rj4ebs0k3qoi7ki.apps.googleusercontent.com",
+              "client_id": "590742587187-0kacb3t05lqjtp37u21pla63oj42cp7n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590742587187:android:8e15025ca207292b",
+        "android_client_info": {
+          "package_name": "com.drnserver.chatsdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590742587187-0kacb3t05lqjtp37u21pla63oj42cp7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWypx2g87DpzvyJYQCem5FE3CACisSJQw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

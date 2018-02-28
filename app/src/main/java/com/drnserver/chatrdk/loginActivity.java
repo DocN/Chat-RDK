@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.drnserver.chatrdk.model.UserIndex;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -199,5 +200,14 @@ public class loginActivity extends AppCompatActivity {
         newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
         FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
+
+        //New node for searching users - Steven
+        UserIndex userIndex = new UserIndex();
+        userIndex.email = newUser.email;
+        userIndex.nameIndex = newUser.name;
+        userIndex.phone = "";
+        userIndex.image ="";
+        userIndex.status = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+        FirebaseDatabase.getInstance().getReference().child("UserIndex/" + user.getUid()).setValue(userIndex);
     }
 }
