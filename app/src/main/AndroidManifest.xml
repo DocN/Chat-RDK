@@ -23,6 +23,8 @@
             android:name="com.drnserver.chatrdk.ui.ChatActivity"
             android:screenOrientation="portrait"
             android:parentActivityName="com.drnserver.chatrdk.MainActivity"/>
+        <activity android:name="com.drnserver.chatrdk.ui.AddGroupActivity"
+            android:theme="@style/MyThemeNoActionbar"/>
     </application>
 
 </manifest>

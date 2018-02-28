@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.drnserver.chatrdk.service.ServiceUtils;
 import com.drnserver.chatrdk.ui.FriendsFragment;
+import com.drnserver.chatrdk.ui.GroupFragment;
 import com.drnserver.chatrdk.ui.ProfileSearchFragment;
 
 
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private FloatingActionButton floatButton;
-
+    private SectionsPageAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +54,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        System.out.println("here dude");
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
+        adapter = new SectionsPageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new GroupFragment(), "Group Chat");
         adapter.addFragment(new FriendsFragment(), "Friends");
         adapter.addFragment(new ProfileSearchFragment(), "Profile Search");
         viewPager.setAdapter(adapter);
-        floatButton.setOnClickListener(((FriendsFragment) adapter.getItem(0)).onClickFloatButton.getInstance(MainActivity.this));
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ServiceUtils.stopServiceFriendChat(MainActivity.this.getApplicationContext(), false);
+                if (adapter.getItem(position) instanceof FriendsFragment) {
+                    floatButton.setVisibility(View.VISIBLE);
+                    floatButton.setOnClickListener(((FriendsFragment) adapter.getItem(position)).onClickFloatButton.getInstance(MainActivity.this));
+                    floatButton.setImageResource(R.drawable.plus);
+                } else if (adapter.getItem(position) instanceof GroupFragment) {
+                    floatButton.setVisibility(View.VISIBLE);
+                    floatButton.setOnClickListener(((GroupFragment) adapter.getItem(position)).onClickFloatButton.getInstance(MainActivity.this));
+                    floatButton.setImageResource(R.drawable.ic_float_add_group);
+                } else {
+                    floatButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
