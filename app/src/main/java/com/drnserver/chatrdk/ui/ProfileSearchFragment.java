@@ -107,7 +107,7 @@ public class ProfileSearchFragment extends Fragment implements View.OnClickListe
         Toast.makeText(getContext(), "Started Search", Toast.LENGTH_LONG).show();
         //Search firebse - Steven
         Query firebaseSearchQuery =
-                userIndex.orderByChild("nameIndex").startAt(searchUser).endAt(searchUser + "\uf8ff");
+                userIndex.orderByChild("nameIndex").startAt(searchUser.toLowerCase()).endAt(searchUser.toLowerCase() + "\uf8ff");
 
         //Custom adaptor to bind data from the Firebase to list ui
         //https://github.com/firebase/FirebaseUI-Android/blob/master/database/README.md

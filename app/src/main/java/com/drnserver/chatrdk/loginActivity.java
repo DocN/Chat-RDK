@@ -196,16 +196,16 @@ public class loginActivity extends AppCompatActivity {
 
     void initNewUserInfo(FirebaseUser user) {
         User newUser = new User();
-        newUser.email = user.getEmail();
+        newUser.email = user.getEmail(); //need to implement filter
         newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
         FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
 
         //New node for searching users - Steven
         UserIndex userIndex = new UserIndex();
-        userIndex.email = newUser.email;
-        userIndex.nameIndex = newUser.name;
-        userIndex.phone = "";
+        userIndex.email = newUser.email.toLowerCase();
+        userIndex.nameIndex = newUser.name.toLowerCase();
+        userIndex.phone = ""; //need to implement filter
         userIndex.image ="";
         userIndex.status = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
         FirebaseDatabase.getInstance().getReference().child("UserIndex/" + user.getUid()).setValue(userIndex);
