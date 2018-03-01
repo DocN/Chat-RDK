@@ -148,6 +148,7 @@ public class loginActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            initNewUserInfo(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -177,7 +178,7 @@ public class loginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             StaticConfig.UID = user.getUid();
-                            initNewUserInfo(user);
+
                             System.out.println("here" + user.getEmail());
                             Intent myIntent = new Intent(loginActivity.this, MainActivity.class);
                             loginActivity.this.startActivity(myIntent);

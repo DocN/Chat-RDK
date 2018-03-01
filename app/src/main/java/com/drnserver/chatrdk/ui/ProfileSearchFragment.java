@@ -2,6 +2,7 @@ package com.drnserver.chatrdk.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +104,6 @@ public class ProfileSearchFragment extends Fragment implements View.OnClickListe
 
     //Seach funtion - Steven
     private void firebaseUserSearch(String searchUser) {
-
         Toast.makeText(getContext(), "Started Search", Toast.LENGTH_LONG).show();
         //Search firebse - Steven
         Query firebaseSearchQuery =
@@ -148,7 +148,7 @@ public class ProfileSearchFragment extends Fragment implements View.OnClickListe
 
             user_name.setText(userName);
             user_status.setText(userStatus);
-
+            Log.d("image", userImage);
             //add user image
             Glide.with(context).load(userImage).into(user_image);
 

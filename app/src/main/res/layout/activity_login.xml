@@ -31,8 +31,7 @@
             android:layout_below="@+id/imageView"
             android:layout_marginTop="34dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="031247ryan@gmail.com" />
+            android:inputType="textPersonName"/>
 
         <EditText
             android:id="@+id/passwordField"

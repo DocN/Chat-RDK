@@ -24,7 +24,8 @@
         android:text="" />
 
     //search button place holder (can be replaced) - Steven
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/searchButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
