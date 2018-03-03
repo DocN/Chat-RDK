@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.drnserver.chatrdk.profileMain">
+    tools:context="com.drnserver.chatrdk.ProfilePage">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,7 +12,8 @@
         tools:layout_editor_absoluteX="63dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/imageButton"
             android:layout_width="150dp"
             android:layout_height="150dp"

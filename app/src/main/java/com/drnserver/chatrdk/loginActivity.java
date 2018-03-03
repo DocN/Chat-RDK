@@ -25,6 +25,7 @@ import com.drnserver.chatrdk.data.StaticConfig;
 import com.google.firebase.database.ValueEventListener;
 
 import com.drnserver.chatrdk.data.SharedPreferenceHelper;
+import com.drnserver.chatrdk.model.UserIndex;
 
 
 import java.util.HashMap;
@@ -155,6 +156,7 @@ public class loginActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            initNewUserInfo(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -184,7 +186,7 @@ public class loginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             StaticConfig.UID = user.getUid();
-                            //initNewUserInfo(user);
+                            //
                             saveUserInfo();
                             Intent myIntent = new Intent(loginActivity.this, MainActivity.class);
                             loginActivity.this.startActivity(myIntent);
@@ -222,9 +224,17 @@ public class loginActivity extends AppCompatActivity {
 
     void initNewUserInfo(FirebaseUser user) {
         User newUser = new User();
-        newUser.email = user.getEmail();
+        newUser.email = user.getEmail(); //need to implement filter
         newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
         FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
+        //New node for searching users - Steven
+        UserIndex userIndex = new UserIndex();
+        userIndex.email = newUser.email.toLowerCase();
+        userIndex.nameIndex = newUser.name.toLowerCase();
+        userIndex.phone = ""; //need to implement filter
+        userIndex.image ="";
+        userIndex.status = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+        FirebaseDatabase.getInstance().getReference().child("UserIndex/" + user.getUid()).setValue(userIndex);
     }
 }

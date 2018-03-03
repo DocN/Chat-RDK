@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chatRDK.iml" filepath="$PROJECT_DIR$/chatRDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chatrdk-dev.iml" filepath="$PROJECT_DIR$/chatrdk-dev.iml" />
     </modules>
   </component>
 </project>
