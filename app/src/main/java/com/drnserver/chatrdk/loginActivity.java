@@ -17,9 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.drnserver.chatrdk.model.User;
 import com.drnserver.chatrdk.data.StaticConfig;
+import com.google.firebase.database.ValueEventListener;
+
+import com.drnserver.chatrdk.data.SharedPreferenceHelper;
+
+
+import java.util.HashMap;
 
 public class loginActivity extends AppCompatActivity {
     private static final int MIN_PASSWORD_LENGTH = 5;
@@ -176,8 +184,8 @@ public class loginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             StaticConfig.UID = user.getUid();
-                            initNewUserInfo(user);
-                            System.out.println("here" + user.getEmail());
+                            //initNewUserInfo(user);
+                            saveUserInfo();
                             Intent myIntent = new Intent(loginActivity.this, MainActivity.class);
                             loginActivity.this.startActivity(myIntent);
                             finish();
@@ -191,6 +199,25 @@ public class loginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    void saveUserInfo() {
+        FirebaseDatabase.getInstance().getReference().child("user/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap hashUser = (HashMap) dataSnapshot.getValue();
+                User userInfo = new User();
+                userInfo.name = (String) hashUser.get("name");
+                userInfo.email = (String) hashUser.get("email");
+                userInfo.avata = (String) hashUser.get("avata");
+                SharedPreferenceHelper.getInstance(loginActivity.this).saveUserInfo(userInfo);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     void initNewUserInfo(FirebaseUser user) {
