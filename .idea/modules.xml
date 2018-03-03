@@ -4,8 +4,9 @@
     <modules>
       <module fileurl="file://C:\Users\DrN\Desktop\chatrdk\Chat-RDK.iml" filepath="C:\Users\DrN\Desktop\chatrdk\Chat-RDK.iml" />
       <module fileurl="file://C:\dev\chatRDK\Chat-RDK.iml" filepath="C:\dev\chatRDK\Chat-RDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Chat-RDK-master.iml" filepath="$PROJECT_DIR$/Chat-RDK-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chatRDK.iml" filepath="$PROJECT_DIR$/chatRDK.iml" />
+      <module fileurl="file://D:\AndroidStudioProjects\Chat-RDK-master\Chat-RDK-master\chatRDK.iml" filepath="D:\AndroidStudioProjects\Chat-RDK-master\Chat-RDK-master\chatRDK.iml" />
       <module fileurl="file://C:\chatrdk\Chat-RDK\chatrdk.iml" filepath="C:\chatrdk\Chat-RDK\chatrdk.iml" />
     </modules>
   </component>
