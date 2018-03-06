@@ -56,7 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textView2"
             android:layout_below="@+id/textView2"
-            android:layout_marginTop="11dp" />
+            android:layout_marginTop="11dp"
+            android:progress="90"
+            />
 
         <TextView
             android:id="@+id/actualDistance"
@@ -66,6 +68,15 @@
             android:layout_toStartOf="@+id/imageButton"
             android:text="8 Miles"
             android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/userLocationInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/seekBar2"
+            android:layout_below="@+id/actualDistance"
+            android:layout_marginTop="18dp"
+            android:text="Your Location:" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
