@@ -2,8 +2,6 @@ const functions = require('firebase-functions');
 
 var admin = require("firebase-admin");
 
-//var serviceAccount = require("firekey.json");
-
 admin.initializeApp({
   credential: admin.credential.cert({
     "type": "service_account",
@@ -20,9 +18,6 @@ admin.initializeApp({
   databaseURL: "https://chatrdk-458bf.firebaseio.com"
 });
 
-
-//defaultDatabase = admin.database();
-
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -32,37 +27,165 @@ admin.initializeApp({
  });
 */
 
-exports.serveUser = functions.database.ref('/chatReq/{newU}').onCreate((event) => {
+exports.testUptime = functions.database.ref('/eugine/').onCreate((event) => {
+    var db = admin.database()
+    var i = 0;
+    db.ref('/euginie/').set("" + i)
+
+});
+
+exports.serveUser = functions.database.ref('/chatReq/{newU}').onUpdate((event) => {
+    // preload the info from the requested node and create necessary vars
     var db = admin.database();
     var uLon = event.data.val().lon;
     var uLat = event.data.val().lat;
     var uRange = event.data.val().range;
-    /*
-    db.ref("lat/" + event.data.key).once('value', function (snap) {
-        console.log(snap.val());
-        locLat = snap;
-   }).then(function() {
-     console.log(locLat);
-     console.log("love");
-   });
-   ;*/
-    // Attach an asynchronous callback to read the data at our posts reference
-    //db.ref("locationZ").startAt('500').endAt('1500').on("value", function(snapshot)
-    db.ref("locationZ").on("child_added", function(snapshot) {
-      var d = getDistanceFromLatLonInKm(snapshot.val().lat, snapshot.val().lon, uLat, uLon);
-      //console.log(d);
-      if (d <= uRange) {
-          console.log(snapshot.key);
-      }
+    var i_list = event.data.val().preferences;
 
+    console.log(i_list);
+    var eligibleUsers = [];
+    var finalList = [];
+    eligibleUsers.push(event.data.key);
+    var p;
+    var m = new Map();
+
+    // get all locations for users which are available for search
+    db.ref("searchpool").once('value').then(function(snapshot) {
+        p = snapshot.val();
+        // iterate through the list, validate the distance and generate the
+        // eligible list
+        for (var key in p) if (p.hasOwnProperty(key) && key != event.data.key) {
+            var d = getDistanceFromLatLonInKm(p[key].lat, p[key].lon, uLat, uLon);
+
+            if (d <= uRange) {
+                var s_list = p[key].preferences;
+                m.set(key, s_list);
+                //aconsole.log (key + "|" + p[key]);
+                eligibleUsers.push(key);
+            }
+        }
+        var match_res = match(db, i_list, m);
+        match_res[0].push(event.data.key);
+        console.log(match_res[0]);
+        console.log(match_res[1]);
+/*
+        // go through the generated list and select 3 random users
+        var i = 0;
+        while (eligibleUsers.length != 0 && finalList.length < 3) {
+            var popIndex = Math.floor(Math.random() * eligibleUsers.length);
+            var rand = eligibleUsers[popIndex];
+            finalList[i] = rand;
+            eligibleUsers.splice(popIndex, popIndex+1);
+            ++i;
+            //console.log(popIndex + "|" + eligibleUsers + "|" + finalList);
+        }
+
+        // save generated users in a node, AKA creating new chat room
+        var ref = db.ref("group/").push().key.child('member');
+        return ref.set(finalList);
+        console.log (finalList.length + "|" + eligibleUsers.length);
+    });
+*/
+    //var ref = db.ref("chatReq/" + event.data.key);
+    //return ref.remove();
     });
 
-    /*
-
-    */
-    var ref = db.ref("chatReq/" + event.data.key);
-    return ref.set("fixed!!!!");
 });
+/*
+################# MATCHING ALGO LOGIC #######################
+active_search           |               passive_search
+-------------------------------------------------------------
+-chat_req               |                 search_pool
+-seach_pool             |
+
+if (added(chat_req)) {
+    candidates_list = distance_filter(search_pool);
+    find_match(candidates_list) {
+        match_list = matches();
+        create_room(match_list);
+        decrease_counters(match_list);
+        if (counter == 0) { ..create new node to namdle it? idk
+            remove_from_pool(user);
+        }
+        if (in_chat_req(match_list)) {
+            remove_from_chat_req(match_list);
+        }
+    }
+}
+
+*/
+
+function match(db, i_list , u_list) {
+    // create connectivity matrix 5xn
+    var f = new Array();
+    var u_size = u_list.size;
+    var uid = new Array();
+    var bin = new Array();
+    var ic = 0;
+    u_list.forEach(function (item, key, mapObj) {
+        uid[ic] = key;
+        var str = "";
+        for (j = 0; j < i_list.length; j++) {
+            if (item.indexOf(i_list[j]) == -1) {
+                str+="0";
+            } else {
+                str+= "1";
+            }
+        }
+        //console.log(str);
+        bin[ic] = str;
+        ic++;
+        //document.write(item.toString() + "<br />");
+    });
+    var sorted_bin = bin;
+    //console.log(bin);
+    //console.log(uid);
+    sorted_bin.sort();
+    var com_c = 1;
+    var temp_i;
+    var lim = 3;
+    var match_str;
+    var results = new Array();
+    results.push(sorted_bin[sorted_bin.length-1]);
+    for (var i = sorted_bin.length-1; i > 0; --i) {
+        //console.log("x" + sorted_bin[i]);
+        if ( sorted_bin[i - 1] == sorted_bin[i]) {
+            //results.push(sorted_bin[i]);
+            results.push(sorted_bin[i]);
+            match_str = sorted_bin[i];
+            com_c++;
+        } else {
+            com_c = 0;
+            var results = new Array();
+        }
+        if (com_c == 2){
+            break;
+        }
+    }
+
+    var final_id = new Array();
+    var final_il = new Array();
+
+    for (i = 0; i < results.length; ++i) {
+        var in_del = bin.indexOf(results[i]);
+        final_id.push(uid[in_del]);
+        bin.splice(in_del, 1);
+        uid.splice(in_del, 1);
+    }
+
+    for (i = 0; i < match_str.length; ++i) {
+        if (match_str[i] == '1') {
+            final_il.push(i_list[i]);
+        }
+    }
+    var comb = new Array();
+    comb[0] = final_id;
+    comb[1] = final_il;
+
+    //console.log(comb[0]);
+    //console.log(comb[1]);
+    return comb;
+}
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
@@ -80,4 +203,4 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 
 function deg2rad(deg) {
   return deg * (Math.PI/180)
-}
+};
