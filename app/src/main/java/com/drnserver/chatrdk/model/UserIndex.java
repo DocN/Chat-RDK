@@ -13,8 +13,9 @@ public class UserIndex {
     public String image;
     public String status;
 
-    public UserIndex() {}
+    public UserIndex() {
 
 
+    }
 
 }
