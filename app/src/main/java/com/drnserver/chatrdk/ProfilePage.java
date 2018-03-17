@@ -133,7 +133,7 @@ public class ProfilePage extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                imgURL = dataSnapshot.getValue().toString();
+                //imgURL = dataSnapshot.getValue().toString();
                 Log.e("imageURL2", imgURL);
                 Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
             }
