@@ -16,6 +16,7 @@ import com.drnserver.chatrdk.DialogUserSearch;
 import com.drnserver.chatrdk.adaptor.UserSearchAdaptor;
 import com.drnserver.chatrdk.model.UserIndex;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -127,8 +128,13 @@ public class ProfileSearchFragment extends Fragment implements
             String phone = (String) ((DataSnapshot) iterator.next()).getValue();
             String status = (String) ((DataSnapshot) iterator.next()).getValue();
             String uid = (String) ((DataSnapshot) iterator.next()).getValue();
-            UserIndex User = new UserIndex (email, image_url,username, phone, status, uid);
-            sList.add(User);
+            UserIndex user = new UserIndex (email, image_url,username, phone, status, uid);
+            if ((user.getUserSearchUID()).equals(FirebaseAuth.getInstance().getCurrentUser()
+                    .getUid())){
+
+            } else {
+                sList.add(user);
+            }
 
         }
         startAdapter();
