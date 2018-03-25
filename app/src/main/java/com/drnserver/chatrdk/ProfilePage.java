@@ -93,7 +93,7 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 LocationInfo thisLocInfo = dataSnapshot.getValue(LocationInfo.class);
-                //oldDist = thisLocInfo.getDist();
+                oldDist = thisLocInfo.getDist();
                 System.out.println("The old value is " + oldDist);
                 locationBar.setProgress(oldDist);
                 userPrefDist.setText(oldDist + " km");
