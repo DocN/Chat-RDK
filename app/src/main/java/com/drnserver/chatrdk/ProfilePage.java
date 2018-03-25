@@ -129,7 +129,8 @@ public class ProfilePage extends AppCompatActivity {
 
         /*Initializing preference variables */
         preferenceBtn = findViewById(R.id.addPreferences);
-         checkedItems = new boolean[preferenceList.length];
+         checkedItems = new boolean[5];
+         preferenceList = getResources().getStringArray(R.array.preference_items);
         selectedPreferences = new ArrayList<>();
         chosenPreference1 = findViewById(R.id.chosenPreference1);
         chosenPreference2 = findViewById(R.id.chosenPreference2);
