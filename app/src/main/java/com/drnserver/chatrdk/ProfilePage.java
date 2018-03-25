@@ -93,7 +93,7 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 LocationInfo thisLocInfo = dataSnapshot.getValue(LocationInfo.class);
-                oldDist = thisLocInfo.getDist();
+                //oldDist = thisLocInfo.getDist();
                 System.out.println("The old value is " + oldDist);
                 locationBar.setProgress(oldDist);
                 userPrefDist.setText(oldDist + " km");
@@ -127,7 +127,7 @@ public class ProfilePage extends AppCompatActivity {
         //Steven setup profile pic
         circleImageView = findViewById(R.id.imageButton);
         userIndex = FirebaseDatabase.getInstance().getReference("UserIndex")
-                .child(mAuth.getCurrentUser().getUid()).child("image");
+                .child(mAuth.getCurrentUser().getUid()).child("userSearchImage");
 
         userIndex.addValueEventListener(new ValueEventListener() {
 
@@ -139,9 +139,7 @@ public class ProfilePage extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
         this.initUserProfile();
 

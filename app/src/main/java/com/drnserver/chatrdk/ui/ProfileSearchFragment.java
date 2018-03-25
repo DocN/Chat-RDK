@@ -59,7 +59,7 @@ public class ProfileSearchFragment extends Fragment implements
     private Uri filePath;
     private String authData;
     private final int PICK_IMAGE_REQUEST = 71;
-    //Firebase
+    //Firebase storage
     private FirebaseStorage storage;
     private StorageReference storageReference;
 
@@ -90,7 +90,7 @@ public class ProfileSearchFragment extends Fragment implements
         resultList.setHasFixedSize(true);
         resultList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //Listener - Steven
+        //Listener for user search button - Steven
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String searchWord = searchText.getText().toString();
@@ -98,7 +98,7 @@ public class ProfileSearchFragment extends Fragment implements
 
             }
         });
-
+        //Listener for the upload image button - steven
         upLoadImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 chooseImage();
@@ -114,38 +114,42 @@ public class ProfileSearchFragment extends Fragment implements
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    //used for choosing image. check if picking image is successful and upload the image
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //if success, upload image
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
-                && data != null && data.getData() != null )
-        {
+                && data != null && data.getData() != null ) {
             filePath = data.getData();
             uploadImage();
         }
     }
 
-    //upload the image to firebase storage
+    //upload the image to firebase storage - steven
     private void uploadImage() {
 
         if(filePath != null)
         {
+            //show upload progress
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-
+            //upload image
             storageReference.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                            //set the profile image
                             setProfileImage();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            //handle upload failed
                             progressDialog.dismiss();
                             Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -153,6 +157,7 @@ public class ProfileSearchFragment extends Fragment implements
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //update upload progress
                             double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
@@ -161,10 +166,12 @@ public class ProfileSearchFragment extends Fragment implements
         }
     }
 
+    //set profile image url to userindex
     private void setProfileImage() {
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri url) {
+                //set image url
                 userIndex.child(authData+"/userSearchImage").setValue(url.toString());
                 //Log.d(TAG, url.toString());
             }
@@ -203,14 +210,10 @@ public class ProfileSearchFragment extends Fragment implements
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
 
@@ -220,7 +223,7 @@ public class ProfileSearchFragment extends Fragment implements
     private void bindToList(DataSnapshot dataSnapshot) {
         Toast.makeText(getContext(), "Searching", Toast.LENGTH_LONG).show();
         Iterator iterator = dataSnapshot.getChildren().iterator();
-
+        //iterate through each data element and store into an object
         while (iterator.hasNext()) {
             String email = (String) ((DataSnapshot) iterator.next()).getValue();
             String image_url = (String) ((DataSnapshot) iterator.next()).getValue();
@@ -232,6 +235,7 @@ public class ProfileSearchFragment extends Fragment implements
             if ((user.getUserSearchUID()).equals(authData)){
 
             } else {
+                //set the object to the list
                 sList.add(user);
             }
 
@@ -255,13 +259,13 @@ public class ProfileSearchFragment extends Fragment implements
     //Dialog to add friend
     public void openDialog(int position){
         UserIndex clickedItem = sList.get(position);
-        //bundle the user info to send to dialog
+        //bundle the user info to send to the custom dialog
         Bundle userInfo = new Bundle();
         userInfo.putString("imageUrl", clickedItem.getUserSearchImage());
         userInfo.putString("userName", clickedItem.getUserSearchName());
         userInfo.putString("userStatus", clickedItem.getUserSearchStatus());
         userInfo.putString("userUID", clickedItem.getUserSearchUID());
-        //make a dialog
+        //start and show the dialog
         DialogUserSearch dialogUserSearch = new DialogUserSearch();
         dialogUserSearch.setArguments(userInfo);
         dialogUserSearch.show(getFragmentManager(), "user search dialog");
