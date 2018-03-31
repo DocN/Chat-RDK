@@ -157,6 +157,7 @@ public class loginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
                             initNewUserInfo(user);
+                            initUserSearchIndex(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -228,13 +229,20 @@ public class loginActivity extends AppCompatActivity {
         newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
         newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
         FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
+    }
+
+    //Steven - UserIndexNode
+    void initUserSearchIndex(FirebaseUser user){
         //New node for searching users - Steven
-        UserIndex userIndex = new UserIndex();
-        userIndex.email = newUser.email.toLowerCase();
-        userIndex.nameIndex = newUser.name.toLowerCase();
-        userIndex.phone = ""; //need to implement filter
-        userIndex.image ="";
-        userIndex.status = "Lorem ipsum dolor sit amet, consectetur adipiscing elit";
-        FirebaseDatabase.getInstance().getReference().child("UserIndex/" + user.getUid()).setValue(userIndex);
+        String email = user.getEmail();
+        String nameIndex = user.getEmail().substring(0, user.getEmail().indexOf("@"));;
+        String phone = ""; //need to implement filter
+        String image ="";
+        String uid = user.getUid();
+        //PlaceHolder
+        String status = "Hi!" + " My name is " + nameIndex + ". Come chat with me!";
+        UserIndex userIndex = new UserIndex( email, image, nameIndex, phone,status, uid);
+        FirebaseDatabase.getInstance().getReference()
+                .child("UserIndex/" + user.getUid()).setValue(userIndex);
     }
 }
