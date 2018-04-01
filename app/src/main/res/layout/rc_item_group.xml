@@ -2,51 +2,114 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
-    android:layout_marginBottom="10dp"
+    android:layout_height="80dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="5dp"
     card_view:cardBackgroundColor="@color/colorCardView"
     card_view:cardCornerRadius="5dp">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageButton
             android:id="@+id/btnMoreAction"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_alignParentTop="true"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_btn_more"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
             android:background="#00000000"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_btn_more" />
 
         <TextView
+            android:layout_marginTop="30dp"
             android:id="@+id/icon_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="R"
-            android:textSize="30sp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBaseline="@+id/txtName"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_alignParentStart="true"
             android:background="@drawable/rounded_textview"
-            android:textColor="@android:color/white"
             android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/btnMoreAction"
-            />
+            android:text="R"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/icon_group2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBaseline="@+id/txtName"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="43dp"
+            android:background="@drawable/rounded_textview"
+            android:gravity="center"
+            android:text="R"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/icon_group3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBaseline="@+id/txtName"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_marginStart="27dp"
+            android:layout_toEndOf="@+id/icon_group"
+            android:background="@drawable/rounded_textview"
+            android:gravity="center"
+            android:text="R"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/icon_group4"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBaseline="@+id/txtName"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_marginStart="25dp"
+            android:layout_toEndOf="@+id/icon_group2"
+            android:background="@drawable/rounded_textview"
+            android:gravity="center"
+            android:text="R"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/icon_group5"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignBaseline="@+id/txtName"
+            android:layout_alignBottom="@+id/txtName"
+            android:layout_marginStart="19dp"
+            android:layout_toEndOf="@+id/icon_group3"
+            android:background="@drawable/rounded_textview"
+            android:gravity="center"
+            android:text="R"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="Rivchat team"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="24dp"
+            android:layout_toStartOf="@+id/btnMoreAction"
             android:ellipsize="end"
             android:lines="1"
-            android:layout_below="@id/icon_group"
+            android:text="Rivchat team"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
