@@ -68,24 +68,15 @@ exports.serveUser = functions.database.ref('/chatReq/{newU}').onUpdate((event) =
         match_res[0].push(event.data.key);
         console.log(match_res[0]);
         console.log(match_res[1]);
-/*
-        // go through the generated list and select 3 random users
-        var i = 0;
-        while (eligibleUsers.length != 0 && finalList.length < 3) {
-            var popIndex = Math.floor(Math.random() * eligibleUsers.length);
-            var rand = eligibleUsers[popIndex];
-            finalList[i] = rand;
-            eligibleUsers.splice(popIndex, popIndex+1);
-            ++i;
-            //console.log(popIndex + "|" + eligibleUsers + "|" + finalList);
-        }
 
         // save generated users in a node, AKA creating new chat room
-        var ref = db.ref("group/").push().key.child('member');
-        return ref.set(finalList);
-        console.log (finalList.length + "|" + eligibleUsers.length);
-    });
-*/
+        var k = db.ref("group/").push().key;
+        db.ref("group/" + k).child('member').set(match_res[0]);
+        db.ref("group/" + k).child('preferences').set(match_res[1]);
+        //return ref.set(match_res[0]);
+        //console.log (finalList.length + "|" + eligibleUsers.length);
+
+
     //var ref = db.ref("chatReq/" + event.data.key);
     //return ref.remove();
     });
@@ -140,26 +131,58 @@ function match(db, i_list , u_list) {
     var sorted_bin = bin;
     //console.log(bin);
     //console.log(uid);
-    sorted_bin.sort();
+    sorted_bin.sort(function(a,b) {
+        if (a > b) {
+            if (numberOfOnes(a) > numberOfOnes(b)) {
+                return -1;
+            }
+            return 1;
+        }
+        if (a < b) {
+            if (numberOfOnes(a) < numberOfOnes(b)) {
+                return 1;
+            }
+            return -1;
+        }
+        // a must be equal to b
+        return 0;
+    });
     var com_c = 1;
     var temp_i;
-    var lim = 3;
     var match_str;
     var results = new Array();
-    results.push(sorted_bin[sorted_bin.length-1]);
-    for (var i = sorted_bin.length-1; i > 0; --i) {
-        //console.log("x" + sorted_bin[i]);
-        if ( sorted_bin[i - 1] == sorted_bin[i]) {
-            //results.push(sorted_bin[i]);
+    console.log(sorted_bin);
+    results.push(sorted_bin[0]);
+    match_str = sorted_bin[0];
+    for (var i = 0; i < sorted_bin.length - 1; ++i) {
+        if ( sorted_bin[i + 1] == sorted_bin[i]) {
             results.push(sorted_bin[i]);
-            match_str = sorted_bin[i];
             com_c++;
+            match_str = sorted_bin[i];
+            //console.log("x" + sorted_bin[i] + "|" + com_c);
         } else {
-            com_c = 0;
+            com_c = 1;
             var results = new Array();
+            results.push(sorted_bin[i]);
         }
-        if (com_c == 2){
+        // massive break logic
+        var int_count = numberOfOnes(match_str);
+        if (com_c >= 4 && int_count >= 4) {
             break;
+        } else if (com_c >= 4 && int_count >= 4) {
+            break;
+        } else if (com_c >= 4 && int_count >= 3) {
+            break;
+        } else if (com_c >= 3 && int_count >= 4) {
+            break;
+        } else if (com_c >= 3 && int_count >= 2) {
+            break;
+        } else if (com_c >= 2 && int_count >= 3) {
+            break;
+        } else if (com_c >= 1 && int_count >= 2) {
+            break;
+        } else {
+
         }
     }
 
@@ -172,7 +195,7 @@ function match(db, i_list , u_list) {
         bin.splice(in_del, 1);
         uid.splice(in_del, 1);
     }
-
+    //console.log(numberOfOnes(match_str));
     for (i = 0; i < match_str.length; ++i) {
         if (match_str[i] == '1') {
             final_il.push(i_list[i]);
@@ -204,3 +227,10 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 };
+
+// get number of 1's in a string
+function numberOfOnes(a) {
+    //var count = result.split(1);//  count -1 is your answer
+    return ((a.split('1').length-1));
+
+}
