@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
-        android:src="@drawable/ic_account_circle_black_24dp"
+        android:src="@mipmap/profile_place_holder"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp" />
 
