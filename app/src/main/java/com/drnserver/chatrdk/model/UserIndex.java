@@ -14,7 +14,9 @@ public class UserIndex {
     private String status;
     private String UID;
 
+
     public UserIndex(){}
+
 
     public UserIndex(String userEmail, String userImage, String userName,  String userPhone,
                      String userStatus, String UID) {
