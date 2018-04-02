@@ -23,17 +23,16 @@
         android:inputType="textPersonName"
         android:text="" />
 
-    //search button place holder (can be replaced) - Steven
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/searchButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/searchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/searchList"
+        android:layout_gravity="end|bottom"
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@+id/searchText"
-        android:src="@drawable/search_button"
-        app:civ_border_width="01dp" />
+        android:src="@drawable/ic_search_black_24dp"
+        app:backgroundTint="#03A9F4" />
 
     //Recycler View - Steven
     <android.support.v7.widget.RecyclerView
