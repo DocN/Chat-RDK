@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drnserver.chatrdk.MainActivity;
+import com.drnserver.chatrdk.service.ChatQueue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +67,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public static final int CONTEXT_MENU_LEAVE = 3;
     public static final int REQUEST_EDIT_GROUP = 0;
     public static final String CONTEXT_MENU_KEY_INTENT_DATA_POS = "pos";
-
+    private final ChatQueue myChatQueue = new ChatQueue();
     LovelyProgressDialog progressDialog, waitingLeavingGroup;
 
     private ItemTouchHelper mItemTouchHelper;
@@ -94,7 +95,10 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         adapter = new ListGroupsAdapter(getContext(), listGroup, this);
         recyclerListGroups.setAdapter(adapter);
 
-
+        //test fragment
+        System.out.println("begin test");
+        System.out.println("end test");
+        //end test fragment
         //ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         //mItemTouchHelper = new ItemTouchHelper(callback);
         //mItemTouchHelper.attachToRecyclerView(recyclerListGroups);
@@ -128,6 +132,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 // https://developer.android.com/reference/android/support/v7/widget/helper/ItemTouchHelper.html#RIGHT
                 if (swipeDir == 8) {
                     // remove item from the list
+                    myChatQueue.enterQueue();
                     listGroup.remove(viewHolder.getAdapterPosition());
                     // update the list
                     adapter.notifyDataSetChanged();
