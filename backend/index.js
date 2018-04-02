@@ -57,7 +57,7 @@ exports.serveUser = functions.database.ref('/chatReq/{newU}').onUpdate((event) =
         for (var key in p) if (p.hasOwnProperty(key) && key != event.data.key) {
             var d = getDistanceFromLatLonInKm(p[key].lat, p[key].lon, uLat, uLon);
 
-            if (d <= uRange) {
+            if (d <= uRange+5) {
                 var s_list = p[key].preferences;
                 m.set(key, s_list);
                 //aconsole.log (key + "|" + p[key]);

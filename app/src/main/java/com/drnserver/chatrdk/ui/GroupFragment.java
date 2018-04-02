@@ -95,9 +95,51 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerListGroups.setAdapter(adapter);
 
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerListGroups);
+        //ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        //mItemTouchHelper = new ItemTouchHelper(callback);
+        //mItemTouchHelper.attachToRecyclerView(recyclerListGroups);
+
+        /*
+        ##########################################################################################
+        Hi Ryan!
+        This is my solution that works for swiping.
+
+        https://stackoverflow.com/questions/40089542/add-swipe-right-to-delete-listview-item
+
+        It seams to be working great! We can implement extra functionality to left direction if we NEED to
+        I didn't remove any of your code cuz I didn't quite know what and where did you add <3
+        Call me on Whatsup if you have questions, or else I'll see you on discord tonight <3
+         */
+        recyclerListGroups.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        recyclerListGroups.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // Remove item from backing list here
+                // swipeDir breakdown:
+                // RIGHT = 8
+                // LEFT = 4
+                // link to others int representations of swiped movement or actions
+                // https://developer.android.com/reference/android/support/v7/widget/helper/ItemTouchHelper.html#RIGHT
+                if (swipeDir == 8) {
+                    // remove item from the list
+                    listGroup.remove(viewHolder.getAdapterPosition());
+                    // update the list
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    // update the list, aka do nothing
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerListGroups);
+        //##########################################################################################
 
         onClickFloatButton = new FragGroupClickFloatButton();
         progressDialog = new LovelyProgressDialog(getContext())
@@ -386,6 +428,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 }
+
 class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter  {
 
     private ArrayList<Group> listGroup;
@@ -452,7 +495,7 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         // Start a drag whenever the handle view it touched
         final ItemGroupViewHolder temp = (ItemGroupViewHolder)holder;
 
-        temp.iconGroup.setOnTouchListener(new View.OnTouchListener() {
+     /*   temp.iconGroup.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -465,7 +508,7 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 }
                 return false;
             }
-        });
+        });*/
     }
 
     @Override
