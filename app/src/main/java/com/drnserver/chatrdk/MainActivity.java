@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     floatButton.setVisibility(View.VISIBLE);
                     floatButton.setOnClickListener(((GroupFragment) adapter.getItem(position)).onClickFloatButton.getInstance(MainActivity.this));
                     floatButton.setImageResource(R.drawable.ic_float_add_group);
+                    GroupFragment groupClient = (GroupFragment) adapter.getItem(position);
                 } else {
                     floatButton.setVisibility(View.GONE);
                 }
