@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.drnserver.chatrdk.profileMain">
+    tools:context="com.drnserver.chatrdk.ProfilePage">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="643dp"
+        android:focusableInTouchMode="true"
         tools:layout_editor_absoluteX="63dp"
-        tools:layout_editor_absoluteY="8dp">
+        tools:layout_editor_absoluteY="8dp"
+        >
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/imageButton"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -55,7 +58,9 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/textView2"
             android:layout_below="@+id/textView2"
-            android:layout_marginTop="11dp" />
+            android:layout_marginTop="11dp"
+            android:progress="90"
+            />
 
         <TextView
             android:id="@+id/actualDistance"
@@ -65,6 +70,148 @@
             android:layout_toStartOf="@+id/imageButton"
             android:text="8 Miles"
             android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/userLocationInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/seekBar2"
+            android:layout_below="@+id/actualDistance"
+            android:layout_marginTop="18dp"
+            android:text="Your Location:" />
+
+        <Button
+            android:id="@+id/addPreferences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/userLocationInfo"
+            android:layout_below= "@+id/userLocationInfo"
+            android:text="Edit Preferences"
+            android:layout_marginTop="10dp"/>
+
+
+        <TextView
+            android:id="@+id/preferenceTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:layout_alignStart="@+id/seekBar2"
+            android:layout_below="@+id/addPreferences"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/black"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/empty"
+            android:onClick="editTextView"
+            android:clickable="true"/>
+
+
+        <TextView
+            android:id="@+id/preferenceTextView2"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addPreferences"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/preferenceTextView1"
+            android:background="@drawable/black"
+            android:text="@string/empty"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:onClick="editTextView"
+            android:clickable="true"
+            />
+
+
+        <TextView
+            android:id="@+id/preferenceTextView3"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addPreferences"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/preferenceTextView2"
+            android:background="@drawable/black"
+            android:text="@string/empty"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:onClick="editTextView"
+            android:clickable="true"
+            />
+
+
+        <EditText
+            android:id="@+id/chosenPreference1"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/preferenceTextView1"
+            android:layout_below="@+id/preferenceTextView1"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/black"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/empty"
+            android:textColor="@color/com_facebook_blue"/>
+
+        <EditText
+            android:id="@+id/chosenPreference2"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/preferenceTextView1"
+            android:layout_toEndOf="@+id/chosenPreference1"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/black"
+            android:text="@string/empty"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:textColor="@color/com_facebook_blue"/>
+
+        <EditText
+            android:id="@+id/chosenPreference3"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_toEndOf="@+id/chosenPreference2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/preferenceTextView1"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/black"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/empty"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
+            android:textColor="@color/com_facebook_blue"/>
+
+        <Button
+            android:layout_marginTop="30dp"
+            android:id="@+id/refereshBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/chosenPreference1"
+            android:layout_below="@id/chosenPreference1"
+
+            android:onClick="updateData"
+            android:text="Update Profile" />
+
+
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
