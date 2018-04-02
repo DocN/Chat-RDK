@@ -14,19 +14,19 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/imageButton"
+            android:id="@+id/profilePageImage"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="87dp"
-            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
+            android:src="@drawable/ic_account_circle_black_24dp" />
 
         <TextView
             android:id="@+id/profileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageButton"
+            android:layout_below="@+id/profilePageImage"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:text="Bruce Wayne"
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/seekBar2"
-            android:layout_toStartOf="@+id/imageButton"
+            android:layout_toStartOf="@+id/profilePageImage"
             android:text="8 Miles"
             android:textSize="10dp" />
 
@@ -77,6 +77,18 @@
             android:layout_below="@+id/actualDistance"
             android:layout_marginTop="18dp"
             android:text="Your Location:" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/uploadDP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/profileName"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="43dp"
+            android:layout_marginStart="22dp"
+            android:layout_toEndOf="@+id/tempIDCheck"
+            android:src="@drawable/ic_cloud_upload_black_24dp"
+            app:backgroundTint="#03A9F4" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

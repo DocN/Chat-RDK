@@ -50,26 +50,18 @@ public class ProfileSearchFragment extends Fragment implements
 
     //Variables - Steven
     private FloatingActionButton searchButton;
-    private FloatingActionButton upLoadImage;
+
     private EditText searchText;
     private RecyclerView resultList;
     private ArrayList<UserIndex> sList;
     private DatabaseReference userIndex;
     private UserSearchAdaptor userSearchAdaptor;
-    private Uri filePath;
     private String authData;
-    private final int PICK_IMAGE_REQUEST = 71;
-    //Firebase storage
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
 
-
-    String id = "CZ1Bcon808dHrAJAl6ExxulmgFZ2";
     @Nullable
     @Override
     public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.user_search_fragment, container, false);
-
     }
 
     @Override
@@ -80,10 +72,7 @@ public class ProfileSearchFragment extends Fragment implements
         userIndex = FirebaseDatabase.getInstance().getReference("UserIndex");
         searchText = getView().findViewById(R.id.searchText);
         searchButton = getView().findViewById((R.id.searchButton));
-        upLoadImage = getView().findViewById(R.id.uploadDP);
-        storage = FirebaseStorage.getInstance();
         authData = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        storageReference = storage.getReference().child("profileImages/" + authData);
 
         //recyclerview - Steven
         resultList = getView().findViewById(R.id.searchList);
@@ -96,89 +85,6 @@ public class ProfileSearchFragment extends Fragment implements
                 String searchWord = searchText.getText().toString();
                 firebaseUserSearch(searchWord);
 
-            }
-        });
-        //Listener for the upload image button - steven
-        upLoadImage.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                chooseImage();
-            }
-        });
-    }
-
-    //choose the image to upload
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    //used for choosing image. check if picking image is successful and upload the image
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //if success, upload image
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
-                && data != null && data.getData() != null ) {
-            filePath = data.getData();
-            uploadImage();
-        }
-    }
-
-    //upload the image to firebase storage - steven
-    private void uploadImage() {
-
-        if(filePath != null)
-        {
-            //show upload progress
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-            //upload image
-            storageReference.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
-                            //set the profile image
-                            setProfileImage();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //handle upload failed
-                            progressDialog.dismiss();
-                            Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            //update upload progress
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
-        }
-    }
-
-    //set profile image url to userindex
-    private void setProfileImage() {
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri url) {
-                //set image url
-                userIndex.child(authData+"/userSearchImage").setValue(url.toString());
-                //Log.d(TAG, url.toString());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
             }
         });
     }
@@ -238,7 +144,6 @@ public class ProfileSearchFragment extends Fragment implements
                 //set the object to the list
                 sList.add(user);
             }
-
         }
         startAdapter();
     }
