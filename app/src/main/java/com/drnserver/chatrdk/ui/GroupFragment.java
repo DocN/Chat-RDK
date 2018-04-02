@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.drnserver.chatrdk.MainActivity;
+import com.drnserver.chatrdk.service.ChatQueue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +57,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public static final int CONTEXT_MENU_LEAVE = 3;
     public static final int REQUEST_EDIT_GROUP = 0;
     public static final String CONTEXT_MENU_KEY_INTENT_DATA_POS = "pos";
-
+    private final ChatQueue myChatQueue = new ChatQueue();
     LovelyProgressDialog progressDialog, waitingLeavingGroup;
 
     public GroupFragment() {
@@ -78,8 +80,61 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mSwipeRefreshLayout.setOnRefreshListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerListGroups.setLayoutManager(layoutManager);
-        adapter = new ListGroupsAdapter(getContext(), listGroup);
+        adapter = new ListGroupsAdapter(getContext(), listGroup, this);
         recyclerListGroups.setAdapter(adapter);
+
+        //test fragment
+        System.out.println("begin test");
+        System.out.println("end test");
+        //end test fragment
+        //ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        //mItemTouchHelper = new ItemTouchHelper(callback);
+        //mItemTouchHelper.attachToRecyclerView(recyclerListGroups);
+
+        /*
+        ##########################################################################################
+        Hi Ryan!
+        This is my solution that works for swiping.
+
+        https://stackoverflow.com/questions/40089542/add-swipe-right-to-delete-listview-item
+
+        It seams to be working great! We can implement extra functionality to left direction if we NEED to
+        I didn't remove any of your code cuz I didn't quite know what and where did you add <3
+        Call me on Whatsup if you have questions, or else I'll see you on discord tonight <3
+         */
+        recyclerListGroups.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        recyclerListGroups.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // Remove item from backing list here
+                // swipeDir breakdown:
+                // RIGHT = 8
+                // LEFT = 4
+                // link to others int representations of swiped movement or actions
+                // https://developer.android.com/reference/android/support/v7/widget/helper/ItemTouchHelper.html#RIGHT
+                if (swipeDir == 8) {
+                    // remove item from the list
+                    myChatQueue.enterQueue();
+                    listGroup.remove(viewHolder.getAdapterPosition());
+                    // update the list
+                    // okay
+                    adapter.notifyDataSetChanged();
+                }
+                else {
+                    // update the list, aka do nothing
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerListGroups);
+        //##########################################################################################
+      
         onClickFloatButton = new FragGroupClickFloatButton();
         progressDialog = new LovelyProgressDialog(getContext())
                 .setCancelable(false)

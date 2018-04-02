@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.drnserver.chatrdk.model.User;
 import com.drnserver.chatrdk.data.StaticConfig;
@@ -42,6 +43,12 @@ public class loginActivity extends AppCompatActivity {
     private Button signupButton;
 
     public static FirebaseAuth mAuth;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference();
+    DatabaseReference myRefLocationZ = myRef.child("locationZ");
+    DatabaseReference myRefPreferenceInfo = myRef.child("preferenceInfo");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +165,11 @@ public class loginActivity extends AppCompatActivity {
                             //updateUI(user);
                             initNewUserInfo(user);
                             initUserSearchIndex(user);
+                            /* ALEX: default distance / lat / lon pushed */
+                            myRefLocationZ.child(user.getUid()).child("dist").setValue(0);
+                            myRefLocationZ.child(user.getUid()).child("lat").setValue(0);
+                            myRefLocationZ.child(user.getUid()).child("lon").setValue(0);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

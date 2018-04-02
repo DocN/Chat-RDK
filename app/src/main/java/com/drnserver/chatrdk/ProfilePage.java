@@ -119,14 +119,15 @@ public class ProfilePage extends AppCompatActivity {
         myRefLocationZ.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Steven: check if data exist
-                if(dataSnapshot.exists()){
-                    //Alex: bind the data
+
+                try {
                     LocationInfo thisLocInfo = dataSnapshot.getValue(LocationInfo.class);
                     oldDist = thisLocInfo.getDist();
                     System.out.println("The old value is " + oldDist);
                     locationBar.setProgress(oldDist);
                     userPrefDist.setText(oldDist + " km");
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
             }
 
@@ -154,10 +155,10 @@ public class ProfilePage extends AppCompatActivity {
         userSearchImageReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                imgURL = dataSnapshot.getValue().toString();
-                if(dataSnapshot.exists() && imgURL != ""){
-                    Log.e("imageURL2", imgURL);
-                    Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
+                if(dataSnapshot.exist()) {
+                  imgURL = dataSnapshot.getValue().toString();
+                  Log.e("imageURL2", imgURL);
+                  Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
                 }
             }
 
@@ -209,13 +210,41 @@ public class ProfilePage extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
+    private void setPreviousChosenPreferenceData() {
+        myRefPreferenceInfo.child(user.getUid()).child("chosenPreferences").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    ArrayList<String> onLoadPreferences = new ArrayList<>();
+                    String item = "";
+                    System.out.println("In the method");
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        System.out.println("testing" + postSnapshot.getValue());
+                        item = "" + postSnapshot.getValue();
+                        onLoadPreferences.add(item);
+                    }
+
+                    chosenPreference1.setText(onLoadPreferences.get(0));
+                    chosenPreference2.setText(onLoadPreferences.get(1));
+                    chosenPreference3.setText(onLoadPreferences.get(2));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+  
     //choose the image to upload - steven
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
 
     //used for choosing image. check if picking image is successful and upload the image - steven
     @Override
