@@ -1,28 +1,21 @@
 package com.drnserver.chatrdk.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -49,14 +42,11 @@ import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import com.drnserver.chatrdk.helper.*;
-import android.support.annotation.Nullable;
 
 
-public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnStartDragListener{
+public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private RecyclerView recyclerListGroups;
     public FragGroupClickFloatButton onClickFloatButton;
     private ArrayList<Group> listGroup;
@@ -69,8 +59,6 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public static final String CONTEXT_MENU_KEY_INTENT_DATA_POS = "pos";
     private final ChatQueue myChatQueue = new ChatQueue();
     LovelyProgressDialog progressDialog, waitingLeavingGroup;
-
-    private ItemTouchHelper mItemTouchHelper;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -90,7 +78,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerListGroups = (RecyclerView) layout.findViewById(R.id.recycleListGroup);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerListGroups.setLayoutManager(layoutManager);
         adapter = new ListGroupsAdapter(getContext(), listGroup, this);
         recyclerListGroups.setAdapter(adapter);
@@ -146,7 +134,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         itemTouchHelper.attachToRecyclerView(recyclerListGroups);
         //##########################################################################################
-
+      
         onClickFloatButton = new FragGroupClickFloatButton();
         progressDialog = new LovelyProgressDialog(getContext())
                 .setCancelable(false)
@@ -165,12 +153,6 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             getListGroup();
         }
         return layout;
-    }
-
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
     }
 
     private void getListGroup(){
@@ -434,16 +416,13 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 }
-
-class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter  {
+class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Group> listGroup;
     public static ListFriend listFriend = null;
     private Context context;
-    private final OnStartDragListener mDragStartListener;
 
-    public ListGroupsAdapter(Context context,ArrayList<Group> listGroup, OnStartDragListener dragStartListener){
-        mDragStartListener = dragStartListener;
+    public ListGroupsAdapter(Context context,ArrayList<Group> listGroup){
         this.context = context;
         this.listGroup = listGroup;
     }
@@ -453,7 +432,6 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         View view = LayoutInflater.from(context).inflate(R.layout.rc_item_group, parent, false);
         return new ItemGroupViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
@@ -469,8 +447,6 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 view.getParent().showContextMenuForChild(view);
             }
         });
-
-
         ((RelativeLayout)((ItemGroupViewHolder) holder).txtGroupName.getParent()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -498,83 +474,32 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 context.startActivity(intent);
             }
         });
-        // Start a drag whenever the handle view it touched
-        final ItemGroupViewHolder temp = (ItemGroupViewHolder)holder;
-
-     /*   temp.iconGroup.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(temp);
-                    //onItemDismiss(temp.getAdapterPosition());
-                }
-                else {
-                    System.out.println("FREE");
-                }
-                return false;
-            }
-        });*/
     }
 
     @Override
     public int getItemCount() {
         return listGroup.size();
     }
-
-    @Override
-    public void onItemDismiss(int position) {
-        try {
-            System.out.println("dismiss");
-            listGroup.remove(position);
-            notifyItemRemoved(position);
-        }catch(Exception e) {
-
-        }
-    }
-
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        System.out.println("onItemMove");
-        Collections.swap(listGroup, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
-
-    public static class ItemGroupViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, ItemTouchHelperViewHolder {
-        public TextView iconGroup, txtGroupName;
-        public ImageButton btnMore;
-        public CardView cardAdapter;
-        public ItemGroupViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnCreateContextMenuListener(this);
-            iconGroup = (TextView) itemView.findViewById(R.id.icon_group);
-            txtGroupName = (TextView) itemView.findViewById(R.id.txtName);
-            btnMore = (ImageButton) itemView.findViewById(R.id.btnMoreAction);
-            cardAdapter = (CardView) itemView.findViewById(R.id.cardAdapter);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            menu.setHeaderTitle((String) ((Object[])btnMore.getTag())[0]);
-            Intent data = new Intent();
-            data.putExtra(GroupFragment.CONTEXT_MENU_KEY_INTENT_DATA_POS, (Integer) ((Object[])btnMore.getTag())[1]);
-            menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_EDIT, Menu.NONE, "Edit group").setIntent(data);
-            menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_DELETE, Menu.NONE, "Delete group").setIntent(data);
-            menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_LEAVE, Menu.NONE, "Leave group").setIntent(data);
-        }
-
-        @Override
-        public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
-        }
-
-        @Override
-        public void onItemClear() {
-            itemView.setBackgroundColor(0);
-        }
-
-    }
 }
 
+class ItemGroupViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public TextView iconGroup, txtGroupName;
+    public ImageButton btnMore;
+    public ItemGroupViewHolder(View itemView) {
+        super(itemView);
+        itemView.setOnCreateContextMenuListener(this);
+        iconGroup = (TextView) itemView.findViewById(R.id.icon_group);
+        txtGroupName = (TextView) itemView.findViewById(R.id.txtName);
+        btnMore = (ImageButton) itemView.findViewById(R.id.btnMoreAction);
+    }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+        menu.setHeaderTitle((String) ((Object[])btnMore.getTag())[0]);
+        Intent data = new Intent();
+        data.putExtra(GroupFragment.CONTEXT_MENU_KEY_INTENT_DATA_POS, (Integer) ((Object[])btnMore.getTag())[1]);
+        menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_EDIT, Menu.NONE, "Edit group").setIntent(data);
+        menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_DELETE, Menu.NONE, "Delete group").setIntent(data);
+        menu.add(Menu.NONE, GroupFragment.CONTEXT_MENU_LEAVE, Menu.NONE, "Leave group").setIntent(data);
+    }
+}
