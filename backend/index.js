@@ -73,6 +73,7 @@ exports.serveUser = functions.database.ref('/chatReq/{newU}').onUpdate((event) =
         var k = db.ref("group/").push().key;
         db.ref("group/" + k).child('member').set(match_res[0]);
         db.ref("group/" + k).child('preferences').set(match_res[1]);
+        db.ref("group/" + k).child('groupInfo').set({'admin' : "XTyFsywYM7csODRYKNFZPh4Wahf2", 'name' : 'zalupa'});
         //return ref.set(match_res[0]);
         //console.log (finalList.length + "|" + eligibleUsers.length);
 
