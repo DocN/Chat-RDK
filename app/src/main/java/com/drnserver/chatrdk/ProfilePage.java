@@ -342,8 +342,9 @@ public class ProfilePage extends AppCompatActivity {
         userSearchImageReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                imgURL = dataSnapshot.getValue().toString();
-                if(dataSnapshot.exists() && imgURL != ""){
+
+                if(dataSnapshot.exists()){
+                    imgURL = dataSnapshot.getValue().toString();
                     Log.e("imageURL2", imgURL);
                     Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
                 }
@@ -435,11 +436,11 @@ public class ProfilePage extends AppCompatActivity {
                     item = "" + postSnapshot.getValue();
                     onLoadPreferences.add(item);
                 }
-
-                chosenPreference1.setText(onLoadPreferences.get(0));
-                chosenPreference2.setText(onLoadPreferences.get(1));
-                chosenPreference3.setText(onLoadPreferences.get(2));
-
+                if (onLoadPreferences.size() != 0){
+                    chosenPreference1.setText(onLoadPreferences.get(0));
+                    chosenPreference2.setText(onLoadPreferences.get(1));
+                    chosenPreference3.setText(onLoadPreferences.get(2));
+                }
             }
 
             @Override
