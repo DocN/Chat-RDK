@@ -135,6 +135,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     myChatQueue.enterQueue();
                     listGroup.remove(viewHolder.getAdapterPosition());
                     // update the list
+                    // okay
                     adapter.notifyDataSetChanged();
                 }
                 else {
