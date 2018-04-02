@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://C:\dev\chatRDK-master\Chat-RDK.iml" filepath="C:\dev\chatRDK-master\Chat-RDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\dev\chatRDK-master\app\app.iml" filepath="C:\dev\chatRDK-master\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/chatRDK-master.iml" filepath="$PROJECT_DIR$/chatRDK-master.iml" />
       <module fileurl="file://D:\cst semester 3\Android\RYAN-SDK\Chat-RDK\chatrdk-dev.iml" filepath="D:\cst semester 3\Android\RYAN-SDK\Chat-RDK\chatrdk-dev.iml" />
     </modules>
