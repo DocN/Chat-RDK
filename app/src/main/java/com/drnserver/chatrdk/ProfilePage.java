@@ -1,15 +1,26 @@
 package com.drnserver.chatrdk;
 
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
@@ -19,11 +30,11 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import android.*;
 import android.Manifest;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -31,6 +42,10 @@ import com.bumptech.glide.Glide;
 import com.drnserver.chatrdk.service.GPStracker;
 import com.drnserver.chatrdk.service.LocationInfo;
 import com.drnserver.chatrdk.service.PreferenceInfo;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +53,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.net.URL;
@@ -105,9 +124,16 @@ public class ProfilePage extends AppCompatActivity {
     private TextView userID;
     private FirebaseAuth mAuth;
     private CircleImageView circleImageView;
-    private DatabaseReference userIndex;
+    private DatabaseReference userSearchImageReference;
     private String imgURL;
-
+    //steven: uploadImage
+    private FloatingActionButton upLoadImage;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
+    //Steven: Firebase storage
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private String authData;
 
 
     @Override
@@ -126,6 +152,14 @@ public class ProfilePage extends AppCompatActivity {
         locationBar = findViewById(R.id.seekBar2);
         //user initialized
         user = mAuth.getCurrentUser();
+        //upload image - steven
+        authData = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        upLoadImage = findViewById(R.id.uploadDP);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference().child("profileImages/" + authData);
+        circleImageView = findViewById(R.id.profilePageImage);
+        userSearchImageReference = FirebaseDatabase.getInstance().getReference("UserIndex")
+                .child(authData).child("userSearchImage");
 
         /*Initializing preference variables */
         preferenceBtn = findViewById(R.id.addPreferences);
@@ -272,29 +306,28 @@ public class ProfilePage extends AppCompatActivity {
         myRefLocationZ.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                LocationInfo thisLocInfo = dataSnapshot.getValue(LocationInfo.class);
-                oldDist = thisLocInfo.getDist();
-                System.out.println("The old value is " + oldDist);
-                locationBar.setProgress(oldDist);
-                userPrefDist.setText(oldDist + " km");
+                //Steven: check if data exist
+                if(dataSnapshot.exists()){
+                    //Alex: bind the data
+                    LocationInfo thisLocInfo = dataSnapshot.getValue(LocationInfo.class);
+                    oldDist = thisLocInfo.getDist();
+                    System.out.println("The old value is " + oldDist);
+                    locationBar.setProgress(oldDist);
+                    userPrefDist.setText(oldDist + " km");
+                }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
          /* ALEX: Set the value of the distance on the progress changed*/
         locationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -304,24 +337,20 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
-        /* Steven: set up profile picture*/
-        circleImageView = findViewById(R.id.imageButton);
-        userIndex = FirebaseDatabase.getInstance().getReference("UserIndex")
-                .child(mAuth.getCurrentUser().getUid()).child("image");
 
-        userIndex.addValueEventListener(new ValueEventListener() {
-
+        //Steven setup profile pic
+        userSearchImageReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 imgURL = dataSnapshot.getValue().toString();
-                Log.e("imageURL2", imgURL);
-                Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
+                if(dataSnapshot.exists() && imgURL != ""){
+                    Log.e("imageURL2", imgURL);
+                    Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
+                }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
         this.initUserProfile();
 
@@ -349,7 +378,6 @@ public class ProfilePage extends AppCompatActivity {
             myRefLocationZ.child(user.getUid()).child("lon").setValue(lon);
         }
 
-
         /* Alex Set Chosen Preferences Listeners */
 
          TextView.OnEditorActionListener exampleListener = new TextView.OnEditorActionListener(){
@@ -374,6 +402,13 @@ public class ProfilePage extends AppCompatActivity {
         /*Sets up data */
 
         setPreviousChosenPreferenceData();
+
+        //Listener for the upload image button - steven
+        upLoadImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
     }
 
 
@@ -386,6 +421,7 @@ public class ProfilePage extends AppCompatActivity {
     private void removeTopBar() {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
+
 
     private void setPreviousChosenPreferenceData() {
         myRefPreferenceInfo.child(user.getUid()).child("chosenPreferences").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -456,5 +492,80 @@ public class ProfilePage extends AppCompatActivity {
         mBuilder.show();
     }
 
+    //choose the image to upload - steven
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
+    //used for choosing image. check if picking image is successful and upload the image - steven
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //if success, upload image
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null ) {
+            filePath = data.getData();
+            uploadImage();
+        }
+    }
+
+    //upload the image to firebase storage - steven
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            //show upload progress - steven
+            final ProgressDialog progressDialog = new ProgressDialog(ProfilePage.this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            //upload image - steven
+            storageReference.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ProfilePage.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            //set the profile image
+                            setProfileImage();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //handle upload failed
+                            progressDialog.dismiss();
+                            Toast.makeText(ProfilePage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //update upload progress
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+
+    //set profile image url to userindex - steven
+    private void setProfileImage() {
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri url) {
+                //set image url
+                userSearchImageReference.setValue(url.toString());
+                //Log.d(TAG, url.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
 }

@@ -4,7 +4,7 @@ package com.drnserver.chatrdk.model;
  * Created by steve on 2/26/2018.
  */
 
-//A class for object to hold all the value needed to search the users. - Steven
+//A class to hold all the value needed to search the users. - Steven
 public class UserIndex {
 
     private String email;
@@ -28,23 +28,15 @@ public class UserIndex {
         this.UID = UID;
     }
 
-    public String getUserSearchEmail() {
-        return email;
-    }
+    public String getUserSearchEmail() {return email;}
     public String getUserSearchImage(){return image;}
-    public String getUserSearchName() {
-        return nameIndex;
-    }
+    public String getUserSearchName() {return nameIndex;}
     public String getUserSearchPhone(){return phone;}
     public String getUserSearchStatus(){return status;}
     public String getUserSearchUID(){return UID;}
 
-    public void setUserSearchName(String s) {
-        nameIndex = s;
-    }
-    public void setUserSearchEmail(String s) {
-        email = s;
-    }
+    public void setUserSearchName(String s) {nameIndex = s;}
+    public void setUserSearchEmail(String s) {email = s;}
     public void setUserSearchPhone(String s){phone = s;}
     public void setUserSearchImage(String s){image = s;}
     public void setUserSearchStatus(String s){status = s;}
