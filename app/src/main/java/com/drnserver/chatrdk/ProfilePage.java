@@ -107,7 +107,7 @@ public class ProfilePage extends AppCompatActivity {
     ArrayList<String> chosenPreferenceValues;
 
     private TextView profileName;
-    private TextView userID;
+    //private TextView userID;
     private FirebaseAuth mAuth;
 
     //steven: profile picture
@@ -134,7 +134,7 @@ public class ProfilePage extends AppCompatActivity {
         mAuth = loginActivity.mAuth;
         //declare objects in view
         profileName = (TextView) findViewById(R.id.profileName);
-        userID = (TextView) findViewById(R.id.tempIDCheck);
+        //userID = (TextView) findViewById(R.id.tempIDCheck);
         userAddress = findViewById(R.id.userLocationInfo);
         //user prefered distance
         userPrefDist = findViewById(R.id.actualDistance);
@@ -410,7 +410,7 @@ public class ProfilePage extends AppCompatActivity {
     /* Ryan: initiates the user profile */
     private void initUserProfile() {
         profileName.setText(mAuth.getCurrentUser().getEmail());
-        userID.setText(mAuth.getCurrentUser().getUid());
+        //userID.setText(mAuth.getCurrentUser().getUid());
     }
 
     private void removeTopBar() {
