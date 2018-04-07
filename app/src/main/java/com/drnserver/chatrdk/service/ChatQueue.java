@@ -1,5 +1,7 @@
 package com.drnserver.chatrdk.service;
 
+import android.os.Handler;
+
 import com.drnserver.chatrdk.loginActivity;
 import com.drnserver.chatrdk.model.QueueData;
 import com.google.firebase.auth.FirebaseAuth;
@@ -11,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.drnserver.chatrdk.loginActivity.mAuth;
 
@@ -34,6 +38,9 @@ public class ChatQueue {
     private static final String RANGE_VAL = "range";
     private static final String PREF_VAL = "preferences";
 
+    private int numberOfChats;
+    private boolean inQueue;
+
     public ChatQueue() {
         //init database
         mAuth = loginActivity.mAuth;
@@ -42,6 +49,11 @@ public class ChatQueue {
         myUid = user.getUid();
         System.out.println(myUid);
         qData = new QueueData();
+        numberOfChats = 10;
+        inQueue = false;
+
+
+        //gather data
         gatherDataInit();
     }
 
@@ -153,10 +165,58 @@ public class ChatQueue {
         });
     }
 
-    public void enterQueue() {
-        chatReqRef.child(user.getUid()).child(LAT_VAL).setValue(qData.getLat());
-        chatReqRef.child(user.getUid()).child(LON_VAL).setValue(qData.getLon());
-        chatReqRef.child(user.getUid()).child(RANGE_VAL).setValue(qData.getLat());
-        chatReqRef.child(user.getUid()).child(PREF_VAL).setValue(qData.returnCombinedPreferences());
+    public int getNumberOfChats() {
+        return numberOfChats;
     }
+
+    public void setNumberOfChats(int numberOfChats) {
+        this.numberOfChats = numberOfChats;
+    }
+
+    public void enterQueue() {
+        try {
+            chatReqRef.child(user.getUid()).child(LAT_VAL).setValue(qData.getLat());
+            chatReqRef.child(user.getUid()).child(LON_VAL).setValue(qData.getLon());
+            chatReqRef.child(user.getUid()).child(RANGE_VAL).setValue(qData.getLat());
+            chatReqRef.child(user.getUid()).child(PREF_VAL).setValue(qData.returnCombinedPreferences());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public boolean isInQueue() {
+        return inQueue;
+    }
+
+    public void setInQueue(boolean inQueue) {
+        this.inQueue = inQueue;
+    }
+
+    /*queue check function to check when we need to enter queue */
+    public void setQueueCheck() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            System.out.println("timing " + numberOfChats);
+
+                            if(numberOfChats <5) {
+                                inQueue = true;
+                                enterQueue();
+                            }
+                        } catch (Exception e) {
+                            // error, do something
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 0, 3000);  // interval of one minute
+    }
+
 }

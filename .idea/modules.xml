@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chatrdk.iml" filepath="$PROJECT_DIR$/chatrdk.iml" />
+      <module fileurl="file://C:\dev\chatrdk-dev\app\app.iml" filepath="C:\dev\chatrdk-dev\app\app.iml" />
+      <module fileurl="file://C:\dev\chatrdk-dev\chatrdk.iml" filepath="C:\dev\chatrdk-dev\chatrdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chatrdk-dev.iml" filepath="$PROJECT_DIR$/chatrdk-dev.iml" />
     </modules>
   </component>
 </project>
