@@ -1,6 +1,7 @@
 package com.drnserver.chatrdk;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        /*ALEX: bottom navigation view set icon size */
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
@@ -67,6 +69,41 @@ public class MainActivity extends AppCompatActivity {
             iconView.setLayoutParams(layoutParams);
         }
 
+        /*ALEX: bottom navigation view  onclick*/
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.singlechat) {
+                    //
+                    System.out.println("singlechat");
+                    item.setChecked(true);
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.groupchat) {
+                    //
+                    System.out.println("groupchat");
+                    item.setChecked(true);
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.friends) {
+                    //
+                    System.out.println("friends");
+                    item.setChecked(true);
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.settings) {
+                    //
+                    System.out.println("setting");
+                    item.setChecked(true);
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager) {
