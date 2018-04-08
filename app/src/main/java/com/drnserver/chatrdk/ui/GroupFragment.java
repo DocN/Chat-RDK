@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -74,6 +75,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     LovelyProgressDialog progressDialog, waitingLeavingGroup;
 
     private ItemTouchHelper mItemTouchHelper;
+    SwipeController swipeController = null;
 
     //chat queue
     private final ChatQueue myChatQueue = new ChatQueue();
@@ -110,6 +112,8 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         //mItemTouchHelper = new ItemTouchHelper(callback);
         //mItemTouchHelper.attachToRecyclerView(recyclerListGroups);
 
+
+
         /*
         ##########################################################################################
         Hi Ryan!
@@ -120,7 +124,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         It seams to be working great! We can implement extra functionality to left direction if we NEED to
         I didn't remove any of your code cuz I didn't quite know what and where did you add <3
         Call me on Whatsup if you have questions, or else I'll see you on discord tonight <3
-         */
+
         recyclerListGroups.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         recyclerListGroups.setAdapter(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -157,6 +161,29 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         itemTouchHelper.attachToRecyclerView(recyclerListGroups);
         //##########################################################################################
+        */
+
+        swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                Group leavingGroup = listGroup.get(position);
+                leaveGroup(leavingGroup);
+                System.out.println("IT WORKED!!!");
+                adapter.notifyDataSetChanged();
+                myChatQueue.setNumberOfChats(listGroup.size());
+            }
+        });
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerListGroups);
+
+        recyclerListGroups.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+
+
 
         onClickFloatButton = new FragGroupClickFloatButton();
         progressDialog = new LovelyProgressDialog(getContext())
@@ -171,10 +198,10 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .setTitle("Group leaving....")
                 .setTopColorRes(R.color.colorAccent);
 
-        if(listGroup.size() == 0){
+
             mSwipeRefreshLayout.setRefreshing(true);
             getListGroup();
-        }
+
         return layout;
     }
 
