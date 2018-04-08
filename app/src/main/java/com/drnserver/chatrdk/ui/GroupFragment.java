@@ -198,10 +198,10 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .setTitle("Group leaving....")
                 .setTopColorRes(R.color.colorAccent);
 
-        if(listGroup.size() == 0){
+
             mSwipeRefreshLayout.setRefreshing(true);
             getListGroup();
-        }
+
         return layout;
     }
 

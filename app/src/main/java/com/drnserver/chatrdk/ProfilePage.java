@@ -1,14 +1,15 @@
 package com.drnserver.chatrdk;
 
-import android.content.Context;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,32 +18,27 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import com.google.firebase.storage.FirebaseStorage;
 
-import android.*;
 import android.Manifest;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.Handler;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.drnserver.chatrdk.service.GPStracker;
 import com.drnserver.chatrdk.service.LocationInfo;
-import com.drnserver.chatrdk.service.PreferenceInfo;
-import com.drnserver.chatrdk.ui.FriendsFragment;
-import com.drnserver.chatrdk.ui.GroupFragment;
-import com.drnserver.chatrdk.ui.ProfileSearchFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,9 +46,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +85,18 @@ public class ProfilePage extends AppCompatActivity {
 
     static int counter1 = 0;
 
+    //steven: profile picture
+    private CircleImageView circleImageView;
+    private DatabaseReference userSearchImageReference;
+    private String imgURL;
+    //steven: uploadImage
+    private FloatingActionButton upLoadImage;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
+    //Steven: Firebase storage
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private String authData;
 
 
 
@@ -117,9 +127,8 @@ public class ProfilePage extends AppCompatActivity {
     private TextView profileName;
     private TextView userID;
     private FirebaseAuth mAuth;
-    private CircleImageView circleImageView;
     private DatabaseReference userIndex;
-    private String imgURL;
+
 
 
 
@@ -151,6 +160,15 @@ public class ProfilePage extends AppCompatActivity {
         premadePreference1 = findViewById(R.id.preferenceTextView1);
         premadePreference2 = findViewById(R.id.preferenceTextView2);
         premadePreference3 = findViewById(R.id.preferenceTextView3);
+
+        //upload image - steven
+        authData = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        upLoadImage = findViewById(R.id.uploadDP);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference().child("profileImages/" + authData);
+        circleImageView = findViewById(R.id.profilePageImage);
+        userSearchImageReference = FirebaseDatabase.getInstance().getReference("UserIndex")
+                .child(authData).child("userSearchImage");
 
         /*ALEX: Opens a dialog box and sets preferences */
         preferenceBtn.setOnClickListener(new View.OnClickListener() {
@@ -321,29 +339,19 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
-        /* Steven: set up profile picture*/
-        circleImageView = findViewById(R.id.imageButton);
-        userIndex = FirebaseDatabase.getInstance().getReference("UserIndex")
-                .child(mAuth.getCurrentUser().getUid()).child("image");
-
-        userIndex.addValueEventListener(new ValueEventListener() {
-
+        //Steven setup profile pic
+        userSearchImageReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() == null) {
-                    return;
-                }
-                imgURL = dataSnapshot.getValue().toString();
-                Log.e("imageURL2", imgURL);
-                if(imgURL != null) {
+                if(dataSnapshot.exists()) {
+                    imgURL = dataSnapshot.getValue().toString();
+                    Log.e("imageURL2", imgURL);
                     Glide.with(getApplicationContext()).load(imgURL).into(circleImageView);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
         this.initUserProfile();
 
@@ -397,7 +405,13 @@ public class ProfilePage extends AppCompatActivity {
 
         setPreviousChosenPreferenceData();
 
+        //Listener for the upload image button - steven
 
+        upLoadImage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
 
             /* Alex: the bottom navigation view */
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
@@ -437,7 +451,6 @@ public class ProfilePage extends AppCompatActivity {
                     Intent i = new Intent(ProfilePage.this , MainActivity.class);
                     i.putExtra("index","groupchat");  //Position means 0,1,2
                     startActivity(i);
-
                     return true;
                 }
 
@@ -553,6 +566,81 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
         mBuilder.show();
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    //used for choosing image. check if picking image is successful and upload the image - steven
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //if success, upload image
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null ) {
+            filePath = data.getData();
+            uploadImage();
+        }
+    }
+
+    //upload the image to firebase storage - steven
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            //show upload progress - steven
+            final ProgressDialog progressDialog = new ProgressDialog(ProfilePage.this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            //upload image - steven
+            storageReference.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ProfilePage.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            //set the profile image
+                            setProfileImage();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //handle upload failed
+                            progressDialog.dismiss();
+                            Toast.makeText(ProfilePage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //update upload progress
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+
+    //set profile image url to userindex - steven
+    private void setProfileImage() {
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri url) {
+                //set image url
+                userSearchImageReference.setValue(url.toString());
+                //Log.d(TAG, url.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
     }
 
 

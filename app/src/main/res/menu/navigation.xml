@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/singlechat"
-        android:icon="@drawable/chat"
-        android:title="" />
+
 
     <item
         android:id="@+id/groupchat"
         android:icon="@drawable/groupchat"
         android:title="" />
-
+    <item
+        android:id="@+id/singlechat"
+        android:icon="@drawable/chat"
+        android:title="" />
     <item
         android:id="@+id/friends"
         android:icon="@drawable/search"

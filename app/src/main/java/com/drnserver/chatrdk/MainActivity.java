@@ -143,7 +143,9 @@ public class MainActivity extends AppCompatActivity {
                 FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.main_content, new ProfileSearchFragment()).commit();
             }
-
+        } else {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.main_content, new GroupFragment()).commit();
         }
     }
 
