@@ -212,6 +212,16 @@
             android:text="Update Profile" />
 
 
+        <android.support.design.widget.BottomNavigationView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            app:menu="@menu/navigation" />
+
+
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

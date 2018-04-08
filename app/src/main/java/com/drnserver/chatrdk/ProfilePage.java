@@ -3,14 +3,22 @@ package com.drnserver.chatrdk;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +39,9 @@ import com.bumptech.glide.Glide;
 import com.drnserver.chatrdk.service.GPStracker;
 import com.drnserver.chatrdk.service.LocationInfo;
 import com.drnserver.chatrdk.service.PreferenceInfo;
+import com.drnserver.chatrdk.ui.FriendsFragment;
+import com.drnserver.chatrdk.ui.GroupFragment;
+import com.drnserver.chatrdk.ui.ProfileSearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -383,6 +394,65 @@ public class ProfilePage extends AppCompatActivity {
         /*Sets up data */
 
         setPreviousChosenPreferenceData();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+        for (int i = 0; i < menuView.getChildCount(); i++) {
+            final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
+            final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
+            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, displayMetrics);
+            layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, displayMetrics);
+            iconView.setLayoutParams(layoutParams);
+        }
+
+        /*ALEX: bottom navigation view  onclick*/
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.singlechat) {
+                    //
+                    System.out.println("singlechat");
+                    item.setChecked(true);
+                    System.out.println("we reached here");
+                    FragmentManager manager = getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.container, new FriendsFragment()).commit();
+
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.groupchat) {
+                    //
+                    System.out.println("groupchat");
+                    item.setChecked(true);
+                    FragmentManager manager = getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.main_content, new GroupFragment()).commit();
+
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.friends) {
+                    //
+                    System.out.println("friends");
+                    item.setChecked(true);
+                    FragmentManager manager = getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.main_content, new ProfileSearchFragment()).commit();
+
+                    return true;
+                }
+
+                if (item.getItemId() == R.id.settings) {
+                    //
+                    System.out.println("setting");
+                    item.setChecked(true);
+
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
 

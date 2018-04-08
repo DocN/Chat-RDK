@@ -9,6 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.drnserver.chatrdk.MainActivity">
 
+    <!--
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -39,6 +40,8 @@
         app:srcCompat="@drawable/ic_float_button"
         app:backgroundTint="@color/colorPrimary"
         />
+
+        -->
 
     <android.support.design.widget.BottomNavigationView
         xmlns:android="http://schemas.android.com/apk/res/android"
