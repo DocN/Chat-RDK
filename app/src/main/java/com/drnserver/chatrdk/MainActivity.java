@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             iconView.setLayoutParams(layoutParams);
         }
 
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+
         /*ALEX: bottom navigation view  onclick*/
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
