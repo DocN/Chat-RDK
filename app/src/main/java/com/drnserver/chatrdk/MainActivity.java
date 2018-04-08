@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
@@ -55,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        //setupViewPager(mViewPager);
+//        mViewPager = (ViewPager) findViewById(R.id.container);
+  //      setupViewPager(mViewPager);
 
         //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         //tabLayout.setupWithViewPager(mViewPager);
@@ -127,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         if(getIntent().hasExtra("index")) {
             String fragment  = getIntent().getExtras().getString("index");
 
-            System.out.println("the fragment is" + fragment);
             if(fragment.equals("singlechat")) {
                 bottomNavigationView.getMenu().getItem(0).setChecked(true);
                 FragmentManager manager = getSupportFragmentManager();
@@ -142,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(fragment.equals("friends")) {
-                System.out.println("singlechat");
-
                 bottomNavigationView.getMenu().getItem(2).setChecked(true);
                 FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.main_content, new ProfileSearchFragment()).commit();
@@ -153,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
+
     private void setupViewPager(ViewPager viewPager) {
         adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new GroupFragment(), "Group Chat");
@@ -215,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    */
+
 
     public void goToProfile() {
         Intent myIntent = new Intent(MainActivity.this, ProfilePage.class);

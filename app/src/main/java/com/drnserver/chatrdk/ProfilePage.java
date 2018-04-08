@@ -466,6 +466,10 @@ public class ProfilePage extends AppCompatActivity {
         });
         // ALEX: set item to checked
         bottomNavigationView.getMenu().getItem(3).setChecked(true);
+
+
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+
     }
 
 
