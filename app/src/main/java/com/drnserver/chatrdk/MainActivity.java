@@ -44,6 +44,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /** ALEX: ifs govern moving from profile activity to other fragments*/
+        if(getIntent().hasExtra("index")) {
+            String fragment  = getIntent().getExtras().getString("index");
+
+            System.out.println("the fragment is" + fragment);
+            if(fragment.equals("singlechat")) {
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.main_content, new FriendsFragment()).commit();
+            }
+
+            if(fragment.equals("groupchat")) {
+
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.main_content, new GroupFragment()).commit();
+            }
+
+            if(fragment.equals("friends")) {
+                System.out.println("singlechat");
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.main_content, new ProfileSearchFragment()).commit();
+            }
+
+        }
+
+
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 

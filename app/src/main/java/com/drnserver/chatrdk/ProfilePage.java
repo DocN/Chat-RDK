@@ -2,6 +2,7 @@ package com.drnserver.chatrdk;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -415,9 +416,9 @@ public class ProfilePage extends AppCompatActivity {
                     System.out.println("singlechat");
                     item.setChecked(true);
                     System.out.println("we reached here");
-                    FragmentManager manager = getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.container, new FriendsFragment()).commit();
-
+                    Intent i = new Intent(ProfilePage.this , MainActivity.class);
+                    i.putExtra("index","singlechat");  //Position means 0,1,2
+                    startActivity(i);
                     return true;
                 }
 
@@ -425,8 +426,9 @@ public class ProfilePage extends AppCompatActivity {
                     //
                     System.out.println("groupchat");
                     item.setChecked(true);
-                    FragmentManager manager = getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.main_content, new GroupFragment()).commit();
+                    Intent i = new Intent(ProfilePage.this , MainActivity.class);
+                    i.putExtra("index","groupchat");  //Position means 0,1,2
+                    startActivity(i);
 
                     return true;
                 }
@@ -435,8 +437,9 @@ public class ProfilePage extends AppCompatActivity {
                     //
                     System.out.println("friends");
                     item.setChecked(true);
-                    FragmentManager manager = getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.main_content, new ProfileSearchFragment()).commit();
+                    Intent i = new Intent(ProfilePage.this , MainActivity.class);
+                    i.putExtra("index","friends");  //Position means 0,1,2
+                    startActivity(i);
 
                     return true;
                 }
