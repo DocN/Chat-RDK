@@ -65,6 +65,7 @@ public class ProfilePage extends AppCompatActivity {
     private boolean backExit;
     private boolean runningBackHold;
 
+
     /* ALEX This is a list that contains address information*/
     List<Address> address;
     /* ALEX This is the view displaying address */
@@ -396,7 +397,12 @@ public class ProfilePage extends AppCompatActivity {
 
         setPreviousChosenPreferenceData();
 
+
+
+            /* Alex: the bottom navigation view */
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+
+
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
         for (int i = 0; i < menuView.getChildCount(); i++) {
             final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
@@ -406,6 +412,8 @@ public class ProfilePage extends AppCompatActivity {
             layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, displayMetrics);
             iconView.setLayoutParams(layoutParams);
         }
+
+
 
         /*ALEX: bottom navigation view  onclick*/
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -456,6 +464,8 @@ public class ProfilePage extends AppCompatActivity {
                 return false;
             }
         });
+        // ALEX: set item to checked
+        bottomNavigationView.getMenu().getItem(3).setChecked(true);
     }
 
 
