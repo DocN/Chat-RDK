@@ -126,14 +126,14 @@ public class MainActivity extends AppCompatActivity {
             String fragment  = getIntent().getExtras().getString("index");
 
             if(fragment.equals("singlechat")) {
-                bottomNavigationView.getMenu().getItem(0).setChecked(true);
+                bottomNavigationView.getMenu().getItem(1).setChecked(true);
                 FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.main_content, new FriendsFragment()).commit();
             }
 
             if(fragment.equals("groupchat")) {
 
-                bottomNavigationView.getMenu().getItem(1).setChecked(true);
+                bottomNavigationView.getMenu().getItem(0).setChecked(true);
                 FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.main_content, new GroupFragment()).commit();
             }
