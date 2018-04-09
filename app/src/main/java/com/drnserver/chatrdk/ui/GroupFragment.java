@@ -67,6 +67,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ArrayList<Group> listGroup;
     private ListGroupsAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ImageButton startSearch;
     public static final int CONTEXT_MENU_DELETE = 1;
     public static final int CONTEXT_MENU_EDIT = 2;
     public static final int CONTEXT_MENU_LEAVE = 3;
@@ -105,7 +106,13 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         //test fragment
         System.out.println("begin test");
-        myChatQueue.setQueueCheck();
+        startSearch = (ImageButton) layout.findViewById(R.id.startSearch);
+        startSearch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                myChatQueue.enterQueue();
+                System.out.println("fuck you jong");
+            }
+        });
         System.out.println("end test");
         //end test fragment
         //ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
@@ -199,8 +206,8 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .setTopColorRes(R.color.colorAccent);
 
 
-            mSwipeRefreshLayout.setRefreshing(true);
-            getListGroup();
+            //mSwipeRefreshLayout.setRefreshing(true);
+            //getListGroup();
 
         return layout;
     }

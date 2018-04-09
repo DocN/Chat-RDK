@@ -166,7 +166,7 @@ public class loginActivity extends AppCompatActivity {
                             initNewUserInfo(user);
                             initUserSearchIndex(user);
                             /* ALEX: default distance / lat / lon pushed */
-                            myRefLocationZ.child(user.getUid()).child("dist").setValue(0);
+                            myRefLocationZ.child(user.getUid()).child("dist").setValue(100);
                             myRefLocationZ.child(user.getUid()).child("lat").setValue(0);
                             myRefLocationZ.child(user.getUid()).child("lon").setValue(0);
 

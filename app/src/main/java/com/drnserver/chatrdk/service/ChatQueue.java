@@ -25,7 +25,7 @@ import static com.drnserver.chatrdk.loginActivity.mAuth;
 public class ChatQueue {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference();
-    DatabaseReference chatReqRef = myRef.child("chatReq");
+    DatabaseReference chatReqRef = myRef.child("chatQueue");
     DatabaseReference locationZRef = myRef.child("locationZ");
     DatabaseReference preferenceInfoRef = myRef.child("preferenceInfo");
     private FirebaseAuth mAuth;
@@ -33,10 +33,11 @@ public class ChatQueue {
     private String myUid;
     private QueueData qData;
 
-    private static final String LAT_VAL = "lat";
-    private static final String LON_VAL = "lon";
-    private static final String RANGE_VAL = "range";
-    private static final String PREF_VAL = "preferences";
+    private static final String LAT_VAL = "Lat";
+    private static final String LON_VAL = "Lon";
+    private static final String RANGE_VAL = "MaxRange";
+    private static final String PREF_VAL = "Preferences";
+    private static final String USER_VAL = "UserID";
 
     private int numberOfChats;
     private boolean inQueue;
@@ -177,7 +178,9 @@ public class ChatQueue {
         try {
             chatReqRef.child(user.getUid()).child(LAT_VAL).setValue(qData.getLat());
             chatReqRef.child(user.getUid()).child(LON_VAL).setValue(qData.getLon());
-            chatReqRef.child(user.getUid()).child(RANGE_VAL).setValue(qData.getLat());
+            chatReqRef.child(user.getUid()).child(RANGE_VAL).setValue(qData.getDistance());
+            chatReqRef.child(user.getUid()).child(USER_VAL).setValue(user.getUid());
+            chatReqRef.child(user.getUid()).child("TimeCreated").setValue("1239494");
             chatReqRef.child(user.getUid()).child(PREF_VAL).setValue(qData.returnCombinedPreferences());
         } catch (Exception e) {
             System.out.println(e);
@@ -190,33 +193,6 @@ public class ChatQueue {
 
     public void setInQueue(boolean inQueue) {
         this.inQueue = inQueue;
-    }
-
-    /*queue check function to check when we need to enter queue */
-    public void setQueueCheck() {
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-                            System.out.println("timing " + numberOfChats);
-
-                            if(numberOfChats <5) {
-                                inQueue = true;
-                                enterQueue();
-                            }
-                        } catch (Exception e) {
-                            // error, do something
-                        }
-                    }
-                });
-            }
-        };
-        timer.schedule(task, 0, 3000);  // interval of one minute
     }
 
 }
