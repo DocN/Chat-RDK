@@ -47,8 +47,12 @@ public class GroupDB {
     }
 
     public void deleteGroup(String idGroup){
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.delete(FeedEntry.TABLE_NAME, FeedEntry.COLUMN_GROUP_ID + " = " + idGroup , null);
+        try {
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            db.delete(FeedEntry.TABLE_NAME, FeedEntry.COLUMN_GROUP_ID + " = " + idGroup, null);
+        }catch(Exception e) {
+
+        }
     }
 
 

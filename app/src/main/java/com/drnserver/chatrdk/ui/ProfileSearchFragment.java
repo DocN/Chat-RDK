@@ -118,7 +118,7 @@ public class ProfileSearchFragment extends Fragment implements
 
     //bind users to the arraylist
     private void bindToList(DataSnapshot dataSnapshot) {
-        Toast.makeText(getContext(), "Searching", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), "Searching", Toast.LENGTH_LONG).show();
         Iterator iterator = dataSnapshot.getChildren().iterator();
 
         while (iterator.hasNext()) {

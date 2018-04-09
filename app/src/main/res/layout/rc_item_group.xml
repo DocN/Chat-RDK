@@ -110,7 +110,7 @@
             android:layout_toStartOf="@+id/btnMoreAction"
             android:ellipsize="end"
             android:lines="1"
-            android:text="Rivchat team"
+            android:text="DrN team"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
