@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drnserver.chatrdk.MainActivity;
+import com.drnserver.chatrdk.model.GroupData;
 import com.drnserver.chatrdk.service.ChatQueue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -80,7 +81,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     SwipeController swipeController = null;
 
     //chat queue
-    private final ChatQueue myChatQueue = new ChatQueue();
+    public static final ChatQueue myChatQueue = new ChatQueue();
 
     public GroupFragment() {
         // Required empty public constructor
@@ -257,10 +258,6 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
                     getGroupInfo(0);
                     System.out.println("refreshing");
-                    if(myChatQueue.getNumberOfChats() < listGroup.size()) {
-                        myChatQueue.setInQueue(false);
-                    }
-                    myChatQueue.setNumberOfChats(listGroup.size());
                 }else{
                     mSwipeRefreshLayout.setRefreshing(false);
                     adapter.notifyDataSetChanged();
@@ -298,9 +295,13 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if(dataSnapshot.getValue() != null){
                         HashMap mapGroup = (HashMap) dataSnapshot.getValue();
                         ArrayList<String> member = (ArrayList<String>) mapGroup.get("member");
+                        ArrayList<String> MatchedPreferences = (ArrayList<String>) mapGroup.get("MatchedPreferences");
                         HashMap mapGroupInfo = (HashMap) mapGroup.get("groupInfo");
                         for(String idMember: member){
                             listGroup.get(indexGroup).member.add(idMember);
+                        }
+                        for(String currentpref: MatchedPreferences){
+                            listGroup.get(indexGroup).MatchedPreferences.add(currentpref);
                         }
                         listGroup.get(indexGroup).groupInfo.put("name", (String) mapGroupInfo.get("name"));
                         listGroup.get(indexGroup).groupInfo.put("admin", (String) mapGroupInfo.get("admin"));
@@ -542,9 +543,18 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final String groupName = listGroup.get(position).groupInfo.get("name");
+        final ArrayList<String> groupPref = listGroup.get(position).MatchedPreferences;
+
+        String preferences = "";
+        for(int i =0; i < groupPref.size(); i++) {
+            preferences = preferences + groupPref.get(i) + "\n";
+        }
         if(groupName != null && groupName.length() > 0) {
             ((ItemGroupViewHolder) holder).txtGroupName.setText(groupName);
+            ((ItemGroupViewHolder) holder).txtGroupName.setVisibility(View.INVISIBLE);
             ((ItemGroupViewHolder) holder).iconGroup.setText((groupName.charAt(0) + "").toUpperCase());
+            ((ItemGroupViewHolder) holder).txtGroupName.setText(groupName);
+            ((ItemGroupViewHolder) holder).preferencesTextView.setText(preferences);
         }
         ((ItemGroupViewHolder) holder).btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -627,12 +637,19 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     public static class ItemGroupViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, ItemTouchHelperViewHolder {
         public TextView iconGroup, txtGroupName;
+        public TextView preferencesTextView;
+        public TextView iconGroup2, iconGroup3, iconGroup4, iconGroup5;
         public ImageButton btnMore;
         public CardView cardAdapter;
         public ItemGroupViewHolder(View itemView) {
             super(itemView);
             itemView.setOnCreateContextMenuListener(this);
             iconGroup = (TextView) itemView.findViewById(R.id.icon_group);
+            iconGroup2 = (TextView) itemView.findViewById(R.id.icon_group2);
+            iconGroup3 = (TextView) itemView.findViewById(R.id.icon_group3);
+            iconGroup4 = (TextView) itemView.findViewById(R.id.icon_group4);
+            iconGroup5 = (TextView) itemView.findViewById(R.id.icon_group5);
+            preferencesTextView = (TextView) itemView.findViewById(R.id.preferencesTextView);
             txtGroupName = (TextView) itemView.findViewById(R.id.txtName);
             btnMore = (ImageButton) itemView.findViewById(R.id.btnMoreAction);
             cardAdapter = (CardView) itemView.findViewById(R.id.cardAdapter);

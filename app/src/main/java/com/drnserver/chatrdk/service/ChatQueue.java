@@ -1,8 +1,10 @@
 package com.drnserver.chatrdk.service;
 
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 
 import com.drnserver.chatrdk.loginActivity;
+import com.drnserver.chatrdk.model.GroupData;
 import com.drnserver.chatrdk.model.QueueData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +30,7 @@ public class ChatQueue {
     DatabaseReference chatReqRef = myRef.child("chatQueue");
     DatabaseReference locationZRef = myRef.child("locationZ");
     DatabaseReference preferenceInfoRef = myRef.child("preferenceInfo");
+
     private FirebaseAuth mAuth;
     FirebaseUser user;
     private String myUid;
@@ -39,6 +42,8 @@ public class ChatQueue {
     private static final String PREF_VAL = "Preferences";
     private static final String USER_VAL = "UserID";
 
+
+    private ArrayList<GroupData> groupDataList;
     private int numberOfChats;
     private boolean inQueue;
 
@@ -52,7 +57,7 @@ public class ChatQueue {
         qData = new QueueData();
         numberOfChats = 10;
         inQueue = false;
-
+        groupDataList = new ArrayList<GroupData>();
 
         //gather data
         gatherDataInit();
@@ -186,6 +191,53 @@ public class ChatQueue {
             System.out.println(e);
         }
     }
+
+    public void getGroupData(final String groupName) {
+        final DatabaseReference group = myRef.child("group");
+        //collect chosenPreferences
+        group.child(groupName).child("MatchedPreferences").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    boolean alreadyExists = false;
+                    GroupData currentGroupData = new GroupData(groupName);
+                    for(int i =0; i < groupDataList.size(); i++) {
+                        if(groupDataList.get(i).getGroupName().equals(groupName)) {
+                            alreadyExists =true;
+                            currentGroupData = groupDataList.get(i);
+                            break;
+                        }
+                    }
+                    if(alreadyExists == false){
+                        groupDataList.add(currentGroupData);
+                    }
+                    ArrayList<String> preferences = new ArrayList<String>();
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        String currentVal = postSnapshot.getValue().toString();
+                        preferences.add(currentVal);
+
+                    }
+                    currentGroupData.setPreferences(preferences);
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public ArrayList<GroupData> getGroupDataList() {
+        return groupDataList;
+    }
+
+    public void setGroupDataList(ArrayList<GroupData> groupDataList) {
+        this.groupDataList = groupDataList;
+    }
+
 
     public boolean isInQueue() {
         return inQueue;
